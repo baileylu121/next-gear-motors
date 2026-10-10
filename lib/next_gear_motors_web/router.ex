@@ -63,13 +63,6 @@ defmodule NextGearMotorsWeb.Router do
       on_mount: [{NextGearMotorsWeb.UserAuth, :ensure_authenticated}] do
       live("/users/settings", UserSettingsLive, :edit)
       live("/users/settings/confirm_email/:token", UserSettingsLive, :confirm_emailA)
-
-      live("/reservations", ReservationLive.Index, :index)
-      live("/reservations/vehicles/:vehicle_id/new", ReservationLive.Index, :new)
-      live("/reservations/:id/edit", ReservationLive.Index, :edit)
-      live("/reservations/:id/messages/:message_id/edit", ReservationLive.Show, :edit_message)
-      live("/reservations/:id", ReservationLive.Show, :show)
-      live("/reservations/:id/show/edit", ReservationLive.Show, :edit)
     end
   end
 

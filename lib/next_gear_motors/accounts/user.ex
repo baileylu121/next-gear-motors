@@ -18,7 +18,6 @@ defmodule NextGearMotors.Accounts.User do
     field :confirmed_at, :utc_datetime
     field :is_admin, :boolean
     field :accepted_privacy_policy, :boolean, virtual: true
-    has_many :reservations, NextGearMotors.Reservations.Reservation
 
     timestamps(type: :utc_datetime)
   end

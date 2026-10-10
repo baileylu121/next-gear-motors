@@ -20,7 +20,6 @@ import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "topbar";
 import "./markdown-block.js";
-import "./humanize-date.js";
 import "./data-animate.js";
 import "./hero-vehicle.js";
 import MishkaComponents from "../vendor/mishka_components.js";

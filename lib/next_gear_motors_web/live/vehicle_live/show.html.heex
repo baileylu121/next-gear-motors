@@ -52,14 +52,17 @@
         </p>
 
         <div class="mt-6 flex flex-col gap-3">
-          <.link patch={~p"/reservations/vehicles/#{@vehicle}/new"}>
-            <.button class="w-full py-3 text-base">Book Reservation</.button>
-          </.link>
           <a
             href="tel:+3530857655578"
             class="inline-flex w-full items-center justify-center gap-2 rounded-2xl py-2 px-3 min-h-11 text-sm font-semibold leading-6 font-sans focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-raw-sienna-600 border border-zinc-300 text-zinc-900 hover:border-raw-sienna-600 hover:text-raw-sienna-700 bg-white"
           >
             <.icon name="hero-phone" class="h-4 w-4" /> Call Now
+          </a>
+          <a
+            href="mailto:nextgearmotors1@gmail.com"
+            class="inline-flex w-full items-center justify-center gap-2 rounded-2xl py-2 px-3 min-h-11 text-sm font-semibold leading-6 font-sans focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-raw-sienna-600 border border-zinc-300 text-zinc-900 hover:border-raw-sienna-600 hover:text-raw-sienna-700 bg-white"
+          >
+            <.icon name="hero-envelope" class="h-4 w-4" /> Send Email
           </a>
           <.link
             :if={@current_user && @current_user.is_admin}

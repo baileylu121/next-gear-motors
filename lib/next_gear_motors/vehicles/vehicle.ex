@@ -32,7 +32,6 @@ defmodule NextGearMotors.Vehicles.Vehicle do
     field :manufacturer, :string
     field :covers, {:array, Cover.Type}, default: []
     field :covers_uploads_status, UploadsStatusType, virtual: true, default: :finished
-    has_many :reservations, NextGearMotors.Reservations.Reservation
 
     timestamps(type: :utc_datetime)
   end

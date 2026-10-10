@@ -815,23 +815,6 @@ let
         in
         drv;
 
-      hammer =
-        let
-          version = "7.5.0";
-          drv = buildMix {
-            inherit version;
-            name = "hammer";
-            appConfigPath = ./config;
-
-            src = fetchHex {
-              inherit version;
-              pkg = "hammer";
-              sha256 = "cb6fb12e5b5a7f1631d5753e9c45493b225bc11f4f09f11ec7f28140c9f0905f";
-            };
-          };
-        in
-        drv;
-
       heroicons = stdenv.mkDerivation {
         name = "heroicons";
         src = fetchFromGitHub {
