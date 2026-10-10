@@ -1,64 +1,90 @@
 <article
-  class="w-full lg:w-screen flex flex-col items-center hidden"
+  class="mx-auto max-w-7xl px-4 py-12 hidden"
   phx-mounted={
     JS.show(
       transition: {"ease-out duration-1000", "opacity-0 scale-95", "opacity-100 scale-100"},
-      display: "flex"
+      display: "block"
     )
   }
 >
-  <.box class="p-4 w-full sm:w-5/6 lg:w-1/2">
-    <span class="flex flex-col sm:flex-row max-sm:items-center justify-between p-2">
-      <h1 class="max-sm:mb-8 font-bold text-2xl text-center m-2">{@vehicle.name}</h1>
-
-      <div class="max-sm:w-full max-sm:m-2 flex flex-row gap-4 max-sm:justify-between">
-        <.link patch={~p"/reservations/vehicles/#{@vehicle}/new"}>
-          <.button>Book Reservation</.button>
-        </.link>
-
-        <.link
-          :if={@current_user && @current_user.is_admin}
-          patch={~p"/vehicles/#{@vehicle}/show/edit"}
-          phx-click={JS.push_focus()}
-        >
-          <.button>Edit</.button>
-        </.link>
-      </div>
-    </span>
-
-    <span
-      class="w-full flex flex-col items-center min-h-2/3"
-      id={"vehicle-images-#{@vehicle.updated_at}"}
-    >
-      <.carousel
-        :if={!Enum.empty?(@vehicle.covers)}
-        class="flex items-center justify-center rounded-xl border border-zinc-600 m-2 shadow-xl p-2"
-        autoplay
-        indicator
-        hidden_slide_class="scale-0"
+  <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+    <div class="lg:col-span-3">
+      <span
+        class="flex w-full flex-col items-center"
+        id={"vehicle-images-#{@vehicle.updated_at}"}
       >
-        <:slide
-          :for={cover <- @vehicle.covers}
-          image={Cover.url(cover)}
-          image_class="rounded-lg h-48 md:h-56 lg:h-80 overflow-hidden"
-        />
-      </.carousel>
-    </span>
+        <.carousel
+          :if={!Enum.empty?(@vehicle.covers)}
+          class="w-full overflow-hidden rounded-2xl border border-zinc-200 bg-parchment shadow-card"
+          autoplay
+          indicator
+          hidden_slide_class="scale-0"
+        >
+          <:slide
+            :for={cover <- @vehicle.covers}
+            image={Cover.url(cover)}
+            image_class="w-full aspect-[16/10] object-cover"
+            class="w-full"
+          />
+        </.carousel>
+      </span>
 
-    <div class="w-full px-2 shadow-xl">
-      <.list>
-        <:title>Information</:title>
-        <:item title="Price">{@vehicle.price}</:item>
-        <:item title="Manufacturer">{@vehicle.manufacturer}</:item>
-      </.list>
+      <div class="mt-6 rounded-2xl border border-zinc-200 bg-white p-6 md:p-8 shadow-card">
+        <h2 class="font-display text-xl font-semibold tracking-tight text-zinc-950">
+          About this car
+        </h2>
+        <div class="mt-3 font-sans text-zinc-700 leading-7">
+          <markdown-block>{@vehicle.description}</markdown-block>
+        </div>
+      </div>
     </div>
 
-    <div class="p-6 mt-8 m-1">
-      <markdown-block>{@vehicle.description}</markdown-block>
-    </div>
+    <div class="lg:col-span-2">
+      <div class="lg:sticky lg:top-24 rounded-2xl border border-zinc-200 bg-white p-6 md:p-8 shadow-card">
+        <p class="font-sans text-xs font-bold uppercase tracking-[0.18em] text-raw-sienna-700">
+          {@vehicle.manufacturer}
+        </p>
+        <h1 class="mt-2 font-display text-3xl md:text-4xl tracking-tight text-zinc-950">
+          {@vehicle.name}
+        </h1>
+        <p class="mt-3 font-display text-3xl font-semibold tracking-tight text-zinc-950">
+          {@vehicle.price}
+        </p>
 
-    <.back navigate={~p"/vehicles"}>See more vehicles</.back>
-  </.box>
+        <div class="mt-6 flex flex-col gap-3">
+          <.link patch={~p"/reservations/vehicles/#{@vehicle}/new"}>
+            <.button class="w-full py-3 text-base">Book Reservation</.button>
+          </.link>
+          <a
+            href="tel:+3530857655578"
+            class="inline-flex w-full items-center justify-center gap-2 rounded-2xl py-2 px-3 min-h-11 text-sm font-semibold leading-6 font-sans focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-raw-sienna-600 border border-zinc-300 text-zinc-900 hover:border-raw-sienna-600 hover:text-raw-sienna-700 bg-white"
+          >
+            <.icon name="hero-phone" class="h-4 w-4" /> Call Now
+          </a>
+          <.link
+            :if={@current_user && @current_user.is_admin}
+            patch={~p"/vehicles/#{@vehicle}/show/edit"}
+            phx-click={JS.push_focus()}
+          >
+            <.button class="w-full" preset={:semi_transparent}>Edit</.button>
+          </.link>
+        </div>
+
+        <dl class="mt-6 divide-y divide-zinc-200 border-t border-zinc-200 font-sans text-sm">
+          <div class="flex flex-row justify-between gap-4 py-3">
+            <dt class="font-semibold text-zinc-950">Price</dt>
+            <dd class="text-zinc-700">{@vehicle.price}</dd>
+          </div>
+          <div class="flex flex-row justify-between gap-4 py-3">
+            <dt class="font-semibold text-zinc-950">Manufacturer</dt>
+            <dd class="text-zinc-700">{@vehicle.manufacturer}</dd>
+          </div>
+        </dl>
+
+        <.back navigate={~p"/vehicles"}>See more vehicles</.back>
+      </div>
+    </div>
+  </div>
 </article>
 
 <.modal

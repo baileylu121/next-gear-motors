@@ -11,7 +11,7 @@ defmodule NextGearMotorsWeb.VehicleLive.FormComponent do
       <.header>
         {@title}
         <:subtitle>
-          Use this form to manage vehicle records in your database. Note that uploading a new batch of images overwrites the old one.
+          Add the details buyers see, then upload photos. Uploading a new batch of images overwrites the old one.
         </:subtitle>
       </.header>
 
@@ -32,12 +32,14 @@ defmodule NextGearMotorsWeb.VehicleLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:covers_uploads_status]} type="hidden" />
-        <.input field={@form[:name]} type="text" label="Name" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <.input field={@form[:name]} type="text" label="Name" />
+          <.input field={@form[:manufacturer]} type="text" label="Manufacturer" />
+        </div>
         <.input field={@form[:price]} type="text" label="Price" />
         <.input field={@form[:description]} type="textarea" label="Description" />
-        <.input field={@form[:manufacturer]} type="text" label="Manufacturer" />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Vehicle</.button>
+          <.button phx-disable-with="Saving..." class="w-full py-3 text-base">Save Vehicle</.button>
         </:actions>
       </.simple_form>
     </div>

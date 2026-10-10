@@ -1,11 +1,18 @@
-<.header>
-  Listing Reservations
-  <:actions>
+<section class="bg-linear-to-br from-cream via-parchment to-raw-sienna-100 border-b border-zinc-200">
+  <article class="mx-auto flex max-w-7xl flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-4 py-12">
+    <div>
+      <p class="font-sans text-xs font-bold uppercase tracking-[0.18em] text-raw-sienna-700">
+        Your visits
+      </p>
+      <h1 class="mt-2 font-display text-4xl md:text-5xl font-bold uppercase text-zinc-950">
+        Reservations
+      </h1>
+    </div>
     <.link patch={~p"/vehicles"}>
       <.button>Browse Vehicles</.button>
     </.link>
-  </:actions>
-</.header>
+  </article>
+</section>
 
 <article
   class="mx-auto flex flex-col items-center hidden transform-gpu"
@@ -17,7 +24,7 @@
     )
   }
 >
-  <section class="px-2">
+  <section class="px-4 w-full max-w-7xl">
     <.table
       id="reservations"
       rows={@streams.reservations}
@@ -57,7 +64,10 @@
       <:empty_message>
         <p>
           You do not have any reservations for any currently existing vehicles at the moment.
-          <.link patch={~p"/vehicles"} class="text-blue-400 hover:underline">
+          <.link
+            patch={~p"/vehicles"}
+            class="text-raw-sienna-700 font-semibold hover:underline"
+          >
             Browse our list of vehicles
           </.link>
           to make a booking!

@@ -22,6 +22,7 @@ import topbar from "topbar";
 import "./markdown-block.js";
 import "./humanize-date.js";
 import "./data-animate.js";
+import "./hero-vehicle.js";
 import MishkaComponents from "../vendor/mishka_components.js";
 
 let Hooks = {};
@@ -56,7 +57,7 @@ let liveSocket = new LiveSocket("/live", Socket, {
 // Show progress bar on live navigation and form submits
 topbar.config({
   barColors: {
-    0: "#29d",
+    0: "#b94726",
   },
   shadowColor: "rgba(0, 0, 0, .3)",
 });

@@ -19,7 +19,11 @@
 @custom-variant phx-change-loading (.phx-change-loading&, .phx-change-loading &);
 
 @theme {
-  --font-sans: "Inter", sans-serif;
+  --font-sans: "Jost", "Inter", sans-serif;
+  --font-display: "Saira Expanded", "Saira", "Jost", "Inter", sans-serif;
+
+  --color-cream: #f5f4f0;
+  --color-parchment: #efede8;
 
   --color-raw-sienna-50: #fcf5ee;
   --color-raw-sienna-100: #f6e2cf;
@@ -35,6 +39,11 @@
 
   --animate-fade-slide-down: fadeSlideDown 0.8s ease-out forwards;
   --animate-fade-slide-right: fadeSlideRight 0.8s ease-out forwards;
+
+  --shadow-card:
+    0 1px 2px rgb(24 24 27 / 0.06), 0 8px 24px -12px rgb(24 24 27 / 0.18);
+  --shadow-lift:
+    0 2px 4px rgb(24 24 27 / 0.08), 0 16px 40px -16px rgb(59 15 13 / 0.25);
 
   @keyframes fadeSlideDown {
     0% {
@@ -76,5 +85,17 @@
   ::backdrop,
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-slide-down,
+  .animate-fade-slide-right,
+  [data-animate-down],
+  [data-animate-right] {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }

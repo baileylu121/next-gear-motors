@@ -78,7 +78,7 @@ defmodule NextGearMotorsWeb.ReservationLive.Index do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Reservations")
+    |> assign(:page_title, "Reservations")
     |> assign(:reservation, nil)
   end
 

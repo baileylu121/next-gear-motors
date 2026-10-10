@@ -55,19 +55,30 @@ defmodule NextGearMotorsWeb.CoreComponents do
     case assigns.mode do
       :accepted ->
         ~H"""
-        <p class="text-green-600" {@rest}>
+        <p
+          class="inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-sans text-xs font-semibold bg-emerald-100 text-emerald-900"
+          {@rest}
+        >
           <.icon name="hero-check-circle" class="m-2 w-5 h-5" />Accepted
         </p>
         """
 
       :denied ->
         ~H"""
-        <p class="text-red-600" {@rest}><.icon name="hero-x-circle" class="m-2 w-5 h-5" />Denied</p>
+        <p
+          class="inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-sans text-xs font-semibold bg-rose-100 text-rose-900"
+          {@rest}
+        >
+          <.icon name="hero-x-circle" class="m-2 w-5 h-5" />Denied
+        </p>
         """
 
       :pending ->
         ~H"""
-        <p class="text-yellow-400" {@rest}>
+        <p
+          class="inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-sans text-xs font-semibold bg-amber-100 text-amber-900"
+          {@rest}
+        >
           <.icon name="hero-question-mark-circle" class="m-2 w-5 h-5" />Pending
         </p>
         """
@@ -92,7 +103,7 @@ defmodule NextGearMotorsWeb.CoreComponents do
     <div
       id={@id}
       class={[
-        "bg-linear-to-br from-neutral-800 via-zinc-800 to-zinc-900 rounded-xl border border-zinc-600",
+        "bg-white border border-zinc-200 rounded-2xl shadow-card",
         @class
       ]}
     >
@@ -134,7 +145,7 @@ defmodule NextGearMotorsWeb.CoreComponents do
     >
       <div
         id={"#{@id}-bg"}
-        class="bg-zinc-950/90 fixed inset-0 transition-opacity"
+        class="bg-zinc-950/50 fixed inset-0 transition-opacity"
         aria-hidden="true"
       />
       <div
@@ -152,7 +163,7 @@ defmodule NextGearMotorsWeb.CoreComponents do
               phx-window-keydown={JS.exec("data-cancel", to: "##{@id}")}
               phx-key="escape"
               phx-click-away={JS.exec("data-cancel", to: "##{@id}")}
-              class="bg-linear-to-br from-neutral-900 via-zinc-900 to-zinc-950 shadow-zinc-300/10 ring-zinc-300/10 relative hidden rounded-2xl bg-transparent p-14 shadow-lg ring-1 transition"
+              class="bg-white text-zinc-900 ring-zinc-200 shadow-lift rounded-2xl relative hidden p-14 shadow-lg ring-1 transition"
             >
               <div class="absolute top-6 right-5">
                 <button
@@ -319,13 +330,13 @@ defmodule NextGearMotorsWeb.CoreComponents do
     preset_class =
       case assigns.preset do
         :primary ->
-          "bg-raw-sienna-400 hover:bg-raw-sienna-500 text-zinc-900 active:text-zinc-900/80"
+          "bg-raw-sienna-600 hover:bg-raw-sienna-700 text-white active:text-white/90 shadow-lift"
 
         :semi_transparent ->
-          "border border-raw-sienna-400 text-zinc-100 active:text-zinc-100/80 hover:bg-zinc-800"
+          "border border-zinc-300 text-zinc-900 active:text-zinc-900/80 hover:border-raw-sienna-600 hover:text-raw-sienna-700 bg-white"
 
         :gradient ->
-          "bg-linear-to-r from-raw-sienna-300 via-raw-sienna-400 to-raw-sienna-500 text-zinc-900 active:text-zinc-900/80 hover:shadow-[0_0_15px_5px_rgba(234,179,128,0.6)] hover:shadow-raw-sienna-500/50 hover:brightness-110"
+          "bg-linear-to-r from-raw-sienna-500 to-raw-sienna-700 text-white active:text-white/90 hover:brightness-110 hover:shadow-lift"
       end
 
     assigns = assign(assigns, :preset_class, preset_class)
@@ -335,8 +346,9 @@ defmodule NextGearMotorsWeb.CoreComponents do
       type={@type}
       class={[
         @class,
-        "rounded-2xl py-2 px-3 phx-submit-loading:opacity-75",
-        "text-sm font-semibold leading-6",
+        "rounded-2xl py-2 px-3 phx-submit-loading:opacity-75 min-h-11",
+        "text-sm font-semibold leading-6 font-sans",
+        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-raw-sienna-600",
         @preset_class
       ]}
       {@rest}
@@ -418,7 +430,7 @@ defmodule NextGearMotorsWeb.CoreComponents do
 
     ~H"""
     <div>
-      <label class="text-sm text-zinc-400">
+      <label class="text-sm text-zinc-700 font-sans">
         <input type="hidden" name={@name} value="false" disabled={@rest[:disabled]} />
         <input
           type="checkbox"
@@ -443,7 +455,7 @@ defmodule NextGearMotorsWeb.CoreComponents do
       <select
         id={@id}
         name={@name}
-        class="mt-2 block w-full rounded-md border border-gray-300 bg-transparent shadow-xs focus:border-zinc-600 focus:ring-0 sm:text-sm capitalize"
+        class="mt-2 block w-full rounded-xl border border-zinc-300 bg-white text-zinc-900 font-sans shadow-xs focus:border-raw-sienna-600 focus:ring-raw-sienna-200 sm:text-sm capitalize"
         multiple={@multiple}
         {@rest}
       >
@@ -463,8 +475,8 @@ defmodule NextGearMotorsWeb.CoreComponents do
         id={@id}
         name={@name}
         class={[
-          "mt-2 block w-full rounded-lg text-zinc-100 focus:ring-0 sm:text-sm sm:leading-6 min-h-24 bg-transparent field-sizing-content",
-          @errors == [] && "border-zinc-700 focus:border-zinc-600",
+          "mt-2 block w-full rounded-xl text-zinc-900 font-sans focus:ring-raw-sienna-200 sm:text-sm sm:leading-6 min-h-24 bg-white field-sizing-content",
+          @errors == [] && "border-zinc-300 focus:border-raw-sienna-600",
           @errors != [] && "border-rose-400 focus:border-rose-400",
           @class
         ]}
@@ -486,8 +498,8 @@ defmodule NextGearMotorsWeb.CoreComponents do
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
-          "mt-2 block w-full rounded-lg text-zinc-100 focus:ring-0 sm:text-sm sm:leading-6 bg-transparent",
-          @errors == [] && "border-zinc-700 focus:border-zinc-600",
+          "mt-2 block w-full rounded-xl text-zinc-900 font-sans focus:ring-raw-sienna-200 sm:text-sm sm:leading-6 bg-white",
+          @errors == [] && "border-zinc-300 focus:border-raw-sienna-600",
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}
         {@rest}
@@ -505,7 +517,7 @@ defmodule NextGearMotorsWeb.CoreComponents do
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="block text-sm font-semibold leading-6 text-zinc-200">
+    <label for={@for} class="block text-sm font-semibold leading-6 text-zinc-900 font-sans">
       {render_slot(@inner_block)}
     </label>
     """
@@ -538,13 +550,14 @@ defmodule NextGearMotorsWeb.CoreComponents do
     ~H"""
     <header class={[
       @actions != [] && "mx-auto max-w-2xl flex items-center justify-between gap-6",
+      "font-display",
       @class
     ]}>
       <div>
-        <h1 class="text-lg font-semibold leading-8 text-zinc-200">
+        <h1 class="text-lg font-semibold leading-8 tracking-tight text-zinc-950">
           {render_slot(@inner_block)}
         </h1>
-        <p :if={@subtitle != []} class="mt-2 text-sm leading-6 text-zinc-400">
+        <p :if={@subtitle != []} class="mt-2 text-sm leading-6 font-sans text-zinc-600">
           {render_slot(@subtitle)}
         </p>
       </div>
@@ -606,10 +619,10 @@ defmodule NextGearMotorsWeb.CoreComponents do
       }
     </style>
 
-    <div class="text-center flex flex-col items-center">
+    <div class="text-center flex flex-col items-center font-sans">
       <table class="w-full mt-11">
-        <thead class="text-sm leading-6 text-zinc-100">
-          <tr class="p-2 bg-zinc-900/50">
+        <thead class="text-sm leading-6 text-white">
+          <tr class="p-2 bg-zinc-950 font-display text-xs uppercase tracking-[0.14em]">
             <th :for={col <- @col} class={[col[:class], "py-6 font-bold"]}>
               {col[:label]}
             </th>
@@ -621,12 +634,12 @@ defmodule NextGearMotorsWeb.CoreComponents do
         <tbody
           id={@id}
           phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
-          class="divide-y divide-zinc-900 border-t border-zinc-800 text-sm leading-6 text-zinc-300"
+          class="divide-y divide-zinc-200 border-t border-zinc-200 text-sm leading-6 font-sans text-zinc-700"
         >
           <tr
             :for={row <- @rows}
             id={@row_id && @row_id.(row)}
-            class="group transition ease-in-out p-5 even:bg-zinc-800/60 odd:bg-zinc-700/50 hover:bg-zinc-900"
+            class="group transition ease-in-out p-5 even:bg-zinc-50 odd:bg-white hover:bg-raw-sienna-50"
           >
             <td
               :for={{col, _i} <- Enum.with_index(@col)}
@@ -638,7 +651,7 @@ defmodule NextGearMotorsWeb.CoreComponents do
               ]}
             >
               <div class="block py-2 sm:py-4 pr-2 sm:pr-6 md:pr-12 lg:pr-20">
-                <span class="group-hover:bg-zinc-950 sm:rounded-l-xl" />
+                <span class="group-hover:bg-raw-sienna-50 sm:rounded-l-xl" />
                 <span>
                   {render_slot(col, @row_item.(row))}
                 </span>
@@ -646,10 +659,10 @@ defmodule NextGearMotorsWeb.CoreComponents do
             </td>
             <td :if={@action != []} class="w-14 p-0 max-sm:hidden">
               <div class="whitespace-nowrap pr-2 py-4 text-sm font-medium">
-                <span class="group-hover:bg-zinc-950 sm:rounded-r-xl" />
+                <span class="group-hover:bg-raw-sienna-50 sm:rounded-r-xl" />
                 <span
                   :for={action <- @action}
-                  class="p-2 font-semibold text-zinc-100 hover:text-zinc-300"
+                  class="p-2 font-semibold text-zinc-700 hover:text-raw-sienna-700"
                 >
                   {render_slot(action, @row_item.(row))}
                 </span>
@@ -685,16 +698,16 @@ defmodule NextGearMotorsWeb.CoreComponents do
   def list(assigns) do
     ~H"""
     <div class={[@class, "my-7"]}>
-      <div class="bg-zinc-900/50 font-bold p-4 text-center text-lg">
+      <div class="bg-zinc-950 text-white font-display text-sm uppercase tracking-[0.14em] font-bold p-4 text-center">
         {render_slot(@title)}
       </div>
-      <dl class="divide-y divide-zinc-900">
+      <dl class="divide-y divide-zinc-200">
         <div
           :for={item <- @item}
-          class="flex flex-row justify-between gap-4 p-4 text-sm leading-6 sm:gap-8 even:bg-zinc-800/60 odd:bg-zinc-700/50"
+          class="flex flex-row justify-between gap-4 p-4 text-sm leading-6 sm:gap-8 even:bg-zinc-50 odd:bg-white"
         >
-          <dt class="w-1/4 text-zinc-200 font-bold">{item.title}</dt>
-          <dd class="text-zinc-300">{render_slot(item)}</dd>
+          <dt class="w-1/4 font-display text-zinc-950 font-bold">{item.title}</dt>
+          <dd class="font-sans text-zinc-700">{render_slot(item)}</dd>
         </div>
       </dl>
     </div>
@@ -716,7 +729,7 @@ defmodule NextGearMotorsWeb.CoreComponents do
     <div class="mt-16">
       <.link
         navigate={@navigate}
-        class="text-sm font-semibold leading-6 text-zinc-100 hover:text-zinc-300"
+        class="text-sm font-semibold leading-6 font-sans text-raw-sienna-700 hover:text-raw-sienna-800"
       >
         <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
         {render_slot(@inner_block)}

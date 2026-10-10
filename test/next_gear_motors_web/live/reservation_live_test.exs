@@ -77,7 +77,7 @@ defmodule NextGearMotorsWeb.ReservationLiveTest do
 
       {:ok, index_live, html} = live(conn, ~p"/reservations")
 
-      assert html =~ "Listing Reservations"
+      assert html =~ "Reservations"
 
       refute has_element?(index_live, "#reservations-#{other_users_reservation.id}")
       assert has_element?(index_live, "#reservations-#{this_users_reservation.id}")
@@ -157,7 +157,7 @@ defmodule NextGearMotorsWeb.ReservationLiveTest do
 
       {:ok, index_live, html} = live(conn, ~p"/reservations")
 
-      assert html =~ "Listing Reservations"
+      assert html =~ "Reservations"
 
       assert has_element?(index_live, "#reservations-#{other_users_reservation.id}")
       assert has_element?(index_live, "#reservations-#{this_users_reservation.id}")

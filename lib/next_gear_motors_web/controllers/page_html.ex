@@ -6,5 +6,8 @@ defmodule NextGearMotorsWeb.PageHTML do
   """
   use NextGearMotorsWeb, :html
 
+  import NextGearMotorsWeb.Components.Carousel
+  alias NextGearMotors.Vehicles.Covers.Cover
+
   embed_templates "page_html/*"
 end

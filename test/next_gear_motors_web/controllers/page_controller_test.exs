@@ -3,8 +3,7 @@ defmodule NextGearMotorsWeb.PageControllerTest do
 
   test "GET / has correct contents", %{conn: conn} do
     conn = get(conn, ~p"/")
-    assert html_response(conn, 200) =~ "Built for the road."
-    assert html_response(conn, 200) =~ "Priced for you."
+    assert html_response(conn, 200) =~ "Your next car is already in Dublin."
   end
 
   test "GET / fires telemetry events", %{conn: conn} do

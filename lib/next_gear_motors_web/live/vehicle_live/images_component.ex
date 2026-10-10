@@ -11,7 +11,7 @@ defmodule NextGearMotorsWeb.VehicleLive.ImagesComponent do
     ~H"""
     <div>
       <form id="upload-form" phx-target={@myself} phx-change="validate" phx-submit="save">
-        <h2 class="block text-sm font-semibold leading-6 text-zinc-200 pt-4">Images</h2>
+        <h2 class="block text-sm font-semibold leading-6 font-sans text-zinc-900 pt-4">Images</h2>
         <span class="w-full flex flex-col sm:flex-row justify-between items-center px-4 pt-3 gap-4 m-4">
           <label for={@uploads.covers.ref} phx-drop-target={@uploads.covers.ref}>
             Drop a file or <.live_file_input upload={@uploads.covers} />
@@ -22,7 +22,7 @@ defmodule NextGearMotorsWeb.VehicleLive.ImagesComponent do
       <section id="upload-entries">
         <article
           :for={entry <- @uploads.covers.entries}
-          class="p-4 bg-zinc-800/50 rounded-3xl border border-zinc-600 flex flex-col items-center shadow-xl my-8"
+          class="p-4 bg-white rounded-2xl border border-zinc-200 flex flex-col items-center shadow-card my-8"
         >
           <button
             type="button"
@@ -35,7 +35,10 @@ defmodule NextGearMotorsWeb.VehicleLive.ImagesComponent do
             &times;
           </button>
           <figure class="w-full flex flex-col items-center px-2">
-            <.live_img_preview entry={entry} class="rounded-xl m-2 border border-zinc-500 shadow" />
+            <.live_img_preview
+              entry={entry}
+              class="rounded-xl m-2 border border-zinc-200 shadow-card"
+            />
             <figcaption
               title={entry.client_name}
               class="max-sm:text-sm flex flex-col sm:flex-row justify-between items-center px-8 py-2 gap-3"
@@ -53,7 +56,7 @@ defmodule NextGearMotorsWeb.VehicleLive.ImagesComponent do
       <section id="cover-entries">
         <article
           :for={{ref, cover} <- @covers}
-          class="p-4 bg-zinc-800/50 rounded-3xl border border-zinc-600 flex flex-col items-center shadow-xl my-8"
+          class="p-4 bg-white rounded-2xl border border-zinc-200 flex flex-col items-center shadow-card my-8"
         >
           <button
             type="button"
@@ -66,7 +69,7 @@ defmodule NextGearMotorsWeb.VehicleLive.ImagesComponent do
             &times;
           </button>
           <figure class="w-full flex flex-col items-center px-2">
-            <img class="rounded-xl m-2 border border-zinc-500 shadow" src={Cover.url(cover)} />
+            <img class="rounded-xl m-2 border border-zinc-200 shadow-card" src={Cover.url(cover)} />
             <figcaption
               title={cover}
               class="max-sm:text-sm flex flex-col sm:flex-row justify-between items-center px-8 py-2 gap-3"

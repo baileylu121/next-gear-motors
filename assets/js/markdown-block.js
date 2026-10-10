@@ -7,7 +7,7 @@ class Markdown extends HTMLElement {
 
   connectedCallback() {
     this.outerHTML = `
-    <div class="prose prose-zinc prose-invert">
+    <div class="prose prose-zinc max-w-none">
       ${marked.parse(this.textContent)}
     </div>
     `;

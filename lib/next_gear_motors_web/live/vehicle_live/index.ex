@@ -48,7 +48,7 @@ defmodule NextGearMotorsWeb.VehicleLive.Index do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Vehicles")
+    |> assign(:page_title, "Vehicles")
     |> assign(:vehicle, nil)
   end
 

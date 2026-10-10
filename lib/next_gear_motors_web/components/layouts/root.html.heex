@@ -8,6 +8,23 @@
       name="description"
       content="NextGear Motors are an independent car dealership in Dublin, Ireland, who specialize in the sale of anything from cars or 4x4s to vans."
     />
+    <meta name="theme-color" content="#F5F4F0" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="NextGear Motors" />
+    <meta property="og:title" content="NextGear Motors: Independent Car Dealership in Dublin" />
+    <meta
+      property="og:description"
+      content="NextGear Motors are an independent car dealership in Dublin, Ireland, who specialize in the sale of anything from cars or 4x4s to vans."
+    />
+    <meta property="og:url" content="https://nextgearmotors.ie/" />
+    <meta property="og:image" content="https://nextgearmotors.ie/images/logo.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="NextGear Motors: Independent Car Dealership in Dublin" />
+    <meta
+      name="twitter:description"
+      content="Browse quality used cars, 4x4s and vans in Dublin. Book a reservation online."
+    />
+    <link rel="canonical" href="https://nextgearmotors.ie/" />
     <.live_title suffix=" · NextGear Motors">
       {assigns[:page_title] || "Home"}
     </.live_title>
@@ -15,79 +32,135 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       defer
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Saira:wdth,wght@75..125,500;75..125,600;75..125,700;75..125,800&family=Jost:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
   </head>
-  <body class="bg-radial-[ellipse_at_bottom_right] from-stone-800 via-neutral-900 to-black xl:flex xl:flex-col xl:items-center font-mono min-h-screen">
-    <nav class="sticky top-3 z-50 shadow-10 flex flex-row justify-between items-center bg-zinc-950 rounded-3xl border border-zinc-800 my-3 mx-4 text-zinc-100 xl:5/6 md:p-2 xl:gap-16">
-      <.link class="flex flex-row hover:text-zinc-300" href={~p"/"}>
-        <.logo class="w-16 m-2" />
-        <p class="max-md:text-sm lg:text-lg p-1 text-center font-bold">NextGear Motors</p>
-      </.link>
-      <button
-        id="open_panel_button"
-        phx-click={
-          JS.toggle_class("rotate-90")
-          |> JS.toggle_class("-translate-x-full", to: "#side_panel")
-          |> JS.toggle_class("opacity-0", to: "#side_panel_bg")
-          |> JS.toggle_class("pointer-events-none", to: "#side_panel_bg")
-        }
-        class="transform-gpu transition-transform duration-300 ease-in-out xl:hidden hover:text-zinc-300"
-        name="Open side panel menu"
-      >
-        <.icon name="hero-bars-3" class="m-3" />
-      </button>
-      <div class="hidden xl:block">
-        <.link href={~p"/vehicles"} class="hover:text-zinc-300 p-3">
-          Vehicles
-        </.link>
-        <.link href={~p"/reservations"} class="hover:text-zinc-300 p-3">
-          Reservations
-        </.link>
-        <.link href={~p"/contact"} class="hover:text-zinc-300 p-3">
-          Contact Us
-        </.link>
-        <.link href={~p"/about"} class="hover:text-zinc-300 p-3">
-          About
-        </.link>
-        <.link
-          :if={@current_user && @current_user.is_admin}
-          patch={~p"/dashboard"}
-          class="hover:text-zinc-300 p-3"
-        >
-          Dashboard
-        </.link>
+  <body class="bg-cream text-zinc-900 font-sans antialiased min-h-screen flex flex-col">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-100 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-raw-sienna-700 focus:outline-2 focus:outline-raw-sienna-600"
+    >
+      Skip to content
+    </a>
+    <header class="sticky top-0 z-50">
+      <div class="hidden sm:block bg-zinc-950 text-zinc-100 text-xs">
+        <div class="mx-auto flex max-w-7xl flex-row items-center justify-between gap-4 px-4 py-2 font-sans">
+          <div class="flex flex-row items-center gap-4">
+            <a href="tel:+3530857655578" class="inline-flex items-center gap-1 hover:text-white">
+              <.icon name="hero-phone" class="h-3.5 w-3.5" /> 085 765 5578
+            </a>
+            <a
+              href="mailto:nextgearmotors1@gmail.com"
+              class="hidden sm:inline-flex items-center gap-1 hover:text-white"
+            >
+              <.icon name="hero-envelope" class="h-3.5 w-3.5" /> nextgearmotors1@gmail.com
+            </a>
+          </div>
+          <div class="hidden sm:flex flex-row items-center gap-4">
+            <.link href={~p"/vehicles"} class="hover:text-white">Vehicles</.link>
+            <.link href={~p"/reservations"} class="hover:text-white">Reservations</.link>
+            <.link href={~p"/contact"} class="hover:text-white">Contact Us</.link>
+          </div>
+        </div>
       </div>
-      <div class="hidden xl:block">
-        <%= if @current_user do %>
-          <.link href={~p"/users/settings"}>
-            <.button preset={:semi_transparent}>
-              {@current_user.email} <.icon name="hero-user" class="h-4 w-4" />
-            </.button>
+      <div class="bg-white/95 backdrop-blur border-b border-zinc-200">
+        <div class="mx-auto flex max-w-7xl flex-row items-center gap-6 px-4 py-3">
+          <.link class="flex flex-row items-center gap-2 shrink-0" href={~p"/"}>
+            <.logo class="w-12" />
+            <p class="font-display font-bold tracking-tight text-zinc-950 text-base whitespace-nowrap">
+              NextGear Motors
+            </p>
           </.link>
-          <.link href={~p"/users/log_out"} method="delete">
-            <.button preset={:semi_transparent}>
-              Log out <.icon name="hero-lock-closed" class="h-4 w-4" />
-            </.button>
-          </.link>
-        <% else %>
-          <.link href={~p"/users/register"}>
-            <.button preset={:semi_transparent}>
-              Register <.icon name="hero-clipboard-document-list" class="h-4 w-4" />
-            </.button>
-          </.link>
-          <.link href={~p"/users/log_in"}>
-            <.button preset={:semi_transparent}>
-              Log in <.icon name="hero-lock-open" class="h-4 w-4" />
-            </.button>
-          </.link>
-        <% end %>
+          <nav aria-label="Primary" class="hidden xl:flex flex-row items-center">
+            <.link
+              href={~p"/vehicles"}
+              class="font-sans text-sm font-medium text-zinc-700 hover:text-raw-sienna-700 px-3 py-2"
+            >
+              Vehicles
+            </.link>
+            <.link
+              href={~p"/reservations"}
+              class="font-sans text-sm font-medium text-zinc-700 hover:text-raw-sienna-700 px-3 py-2"
+            >
+              Reservations
+            </.link>
+            <.link
+              href={~p"/contact"}
+              class="font-sans text-sm font-medium text-zinc-700 hover:text-raw-sienna-700 px-3 py-2"
+            >
+              Contact Us
+            </.link>
+            <.link
+              href={~p"/about"}
+              class="font-sans text-sm font-medium text-zinc-700 hover:text-raw-sienna-700 px-3 py-2"
+            >
+              About
+            </.link>
+            <.link
+              :if={@current_user && @current_user.is_admin}
+              patch={~p"/dashboard"}
+              class="font-sans text-sm font-medium text-zinc-700 hover:text-raw-sienna-700 px-3 py-2"
+            >
+              Dashboard
+            </.link>
+          </nav>
+          <div class="hidden xl:flex flex-row items-center gap-2 ml-auto">
+            <.link href={~p"/vehicles"} class="shrink-0">
+              <.button preset={:gradient}>Shop Vehicles</.button>
+            </.link>
+            <%= if @current_user do %>
+              <.link href={~p"/users/settings"} class="min-w-0">
+                <.button preset={:semi_transparent} class="max-w-56 truncate">
+                  {@current_user.email} <.icon name="hero-user" class="h-4 w-4 shrink-0" />
+                </.button>
+              </.link>
+              <.link href={~p"/users/log_out"} method="delete" class="shrink-0">
+                <.button preset={:semi_transparent}>
+                  Log out <.icon name="hero-lock-closed" class="h-4 w-4" />
+                </.button>
+              </.link>
+            <% else %>
+              <.link href={~p"/users/register"} class="shrink-0">
+                <.button preset={:semi_transparent}>
+                  Register <.icon name="hero-clipboard-document-list" class="h-4 w-4" />
+                </.button>
+              </.link>
+              <.link href={~p"/users/log_in"} class="shrink-0">
+                <.button preset={:semi_transparent}>
+                  Log in <.icon name="hero-lock-open" class="h-4 w-4" />
+                </.button>
+              </.link>
+            <% end %>
+          </div>
+          <a
+            href="tel:+3530857655578"
+            aria-label="Call NextGear Motors"
+            class="xl:hidden ml-auto inline-flex items-center justify-center rounded-full border border-zinc-300 text-zinc-900 hover:border-raw-sienna-600 hover:text-raw-sienna-700 bg-white h-11 w-11 shrink-0"
+          >
+            <.icon name="hero-phone" class="h-5 w-5" />
+          </a>
+          <button
+            id="open_panel_button"
+            phx-click={
+              JS.toggle_class("rotate-90")
+              |> JS.toggle_class("-translate-x-full", to: "#side_panel")
+              |> JS.toggle_class("opacity-0", to: "#side_panel_bg")
+              |> JS.toggle_class("pointer-events-none", to: "#side_panel_bg")
+            }
+            class="transform-gpu transition-transform duration-300 ease-in-out xl:hidden text-zinc-900 hover:text-raw-sienna-700"
+            aria-expanded="false"
+            aria-controls="side_panel"
+            aria-label="Open menu"
+          >
+            <.icon name="hero-bars-3" class="m-3" />
+          </button>
+        </div>
       </div>
-    </nav>
+    </header>
     <button
       id="side_panel_bg"
       class="transform-gpu fixed left-0 top-0 z-50 w-full h-full backdrop-blur-md pointer-events-none opacity-0 transition duration-300 ease-in-out"
@@ -100,53 +173,122 @@
     >
       <div
         id="side_panel"
-        class="bg-zinc-950 border border-zinc-800 h-full w-max relative left-0 flex flex-col py-2 px-8 shadow-xl text-zinc-100 font-bold transition duration-300 ease-in-out -translate-x-full opacity-90"
+        role="dialog"
+        aria-label="Site menu"
+        class="bg-white border border-zinc-200 h-full w-max relative left-0 flex flex-col py-2 px-8 shadow-xl text-zinc-900 font-bold transition duration-300 ease-in-out -translate-x-full"
       >
-        <.link href={~p"/"} class="flex flex-col items-center border-b pb-3 mb-3">
-          <.logo class="w-16 m-2" />
-          <h1 class="p-1 text-center text-lg">NextGear Motors</h1>
+        <.link href={~p"/"} class="flex flex-col items-center border-b border-zinc-200 pb-3 mb-3">
+          <.logo class="w-14 m-2" />
+          <p class="p-1 text-center text-lg font-display tracking-tight">NextGear Motors</p>
         </.link>
-        <.link href={~p"/vehicles"} class="hover:text-zinc-300 my-3">
+        <.link href={~p"/vehicles"} class="hover:text-raw-sienna-700 my-3">
           Vehicles
         </.link>
-        <.link href={~p"/reservations"} class="hover:text-zinc-300 my-3">
+        <.link href={~p"/reservations"} class="hover:text-raw-sienna-700 my-3">
           Reservations
         </.link>
-        <.link href={~p"/contact"} class="hover:text-zinc-300 my-3">
+        <.link href={~p"/contact"} class="hover:text-raw-sienna-700 my-3">
           Contact Us
         </.link>
-        <.link href={~p"/about"} class="hover:text-zinc-300 my-3">
+        <.link href={~p"/about"} class="hover:text-raw-sienna-700 my-3">
           About
         </.link>
         <.link
           :if={@current_user && @current_user.is_admin}
           patch={~p"/dashboard"}
-          class="hover:text-zinc-300 my-3"
+          class="hover:text-raw-sienna-700 my-3"
         >
           Dashboard
         </.link>
         <div class="flex flex-col mt-10">
           <%= if @current_user do %>
             <.link href={~p"/users/settings"}>
-              {@current_user.email} <.icon name="hero-user" class="hover:text-zinc-300 my-3" />
+              {@current_user.email}
+              <.icon name="hero-user" class="hover:text-raw-sienna-700 my-3" />
             </.link>
             <.link href={~p"/users/log_out"} method="delete">
-              Log out <.icon name="hero-lock-closed" class="hover:text-zinc-300 my-3" />
+              Log out <.icon name="hero-lock-closed" class="hover:text-raw-sienna-700 my-3" />
             </.link>
           <% else %>
             <.link href={~p"/users/register"}>
               Register
-              <.icon name="hero-clipboard-document-list" class="hover:text-zinc-300 my-3" />
+              <.icon name="hero-clipboard-document-list" class="hover:text-raw-sienna-700 my-3" />
             </.link>
             <.link href={~p"/users/log_in"}>
-              Log in <.icon name="hero-lock-open" class="hover:text-zinc-300 my-3" />
+              Log in <.icon name="hero-lock-open" class="hover:text-raw-sienna-700 my-3" />
             </.link>
           <% end %>
         </div>
       </div>
     </button>
-    <main class="text-zinc-100 h-max">
+    <main id="main-content" class="text-zinc-900 flex-1 w-full">
       {@inner_content}
     </main>
+    <footer class="bg-zinc-950 text-zinc-300 mt-auto w-full">
+      <div class="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4">
+        <div>
+          <div class="flex flex-row items-center gap-2">
+            <.logo class="w-12" />
+            <p class="font-display font-bold tracking-tight text-white text-lg">
+              NextGear Motors
+            </p>
+          </div>
+          <p class="mt-4 text-sm leading-6 font-sans">
+            Independent car dealership in Dublin, Ireland: cars, 4x4s and vans.
+          </p>
+        </div>
+        <nav aria-label="Footer">
+          <p class="font-display text-xs font-bold uppercase tracking-[0.18em] text-white">
+            Quick links
+          </p>
+          <ul class="mt-4 space-y-2 text-sm font-sans">
+            <li><.link href={~p"/vehicles"} class="hover:text-white">Vehicles</.link></li>
+            <li><.link href={~p"/reservations"} class="hover:text-white">Reservations</.link></li>
+            <li><.link href={~p"/contact"} class="hover:text-white">Contact Us</.link></li>
+            <li><.link href={~p"/about"} class="hover:text-white">About</.link></li>
+          </ul>
+        </nav>
+        <div>
+          <p class="font-display text-xs font-bold uppercase tracking-[0.18em] text-white">
+            Contact
+          </p>
+          <ul class="mt-4 space-y-2 text-sm font-sans">
+            <li>
+              <a href="tel:+3530857655578" class="hover:text-white">085 765 5578</a>
+            </li>
+            <li>
+              <a href="mailto:nextgearmotors1@gmail.com" class="hover:text-white">
+                nextgearmotors1@gmail.com
+              </a>
+            </li>
+            <li>
+              <a href="https://www.instagram.com/nextgearmotors/" class="hover:text-white">
+                Instagram
+              </a>
+            </li>
+            <li>
+              <a href="https://www.tiktok.com/@nextgearmotors25" class="hover:text-white">
+                TikTok
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <p class="font-display text-xs font-bold uppercase tracking-[0.18em] text-white">
+            Legal
+          </p>
+          <ul class="mt-4 space-y-2 text-sm font-sans">
+            <li><.link href={~p"/privacy"} class="hover:text-white">Privacy</.link></li>
+            <li><.link href={~p"/cookies"} class="hover:text-white">Cookies</.link></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-zinc-800">
+        <div class="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-4 text-xs font-sans sm:flex-row sm:items-center sm:justify-between">
+          <p>© NextGear Motors</p>
+          <p>Sourcing and trade-ins welcome. Contact us.</p>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

@@ -1,15 +1,17 @@
-<article class="flex flex-col items-center p-4 md:p-10 md:p-20 gap-16">
-  <section class="w-full">
-    <h1 class="bg-zinc-900/50 font-bold p-4 text-center text-lg">404 - Page Not Found</h1>
-
-    <div class="bg-zinc-800/50 p-4">
-      <p>
-        No valid route exists at this url.
-      </p>
-      <p>
-        It likely does not exist or has been moved.
-      </p>
-      <.back navigate={~p"/reservations"}>Back to home</.back>
-    </div>
-  </section>
+<article class="mx-auto max-w-3xl px-4 py-16 flex flex-col items-center gap-8 text-center">
+  <header data-animate-down>
+    <p class="font-sans text-xs font-bold uppercase tracking-[0.18em] text-raw-sienna-700">
+      Lost?
+    </p>
+    <h1 class="mt-3 font-display text-3xl md:text-4xl font-bold uppercase text-zinc-950">
+      404 - Page Not Found
+    </h1>
+    <p class="mt-3 font-sans text-zinc-600">
+      No valid route exists at this url. It likely does not exist or has been moved.
+    </p>
+  </header>
+  <.link
+    href={~p"/"}
+    class="inline-flex items-center justify-center gap-2 rounded-2xl py-2 px-3 min-h-11 text-sm font-semibold leading-6 font-sans focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-raw-sienna-600 bg-linear-to-r from-raw-sienna-500 to-raw-sienna-700 text-white hover:brightness-110 hover:shadow-lift"
+  >Back to home</.link>
 </article>

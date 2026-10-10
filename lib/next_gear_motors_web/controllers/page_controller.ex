@@ -4,9 +4,13 @@ defmodule NextGearMotorsWeb.PageController do
   def home(conn, _params) do
     :telemetry.execute([:next_gear_motors], %{visits: 1})
 
-    # The home page is often custom made,
-    # so skip the default app layout.
-    render(conn, :home, layout: false)
+    render(conn, :home,
+      layout: false,
+      featured_vehicles:
+        NextGearMotors.Vehicles.list_vehicles()
+        |> Enum.filter(&(Map.get(&1, :covers, []) != []))
+        |> Enum.take(3)
+    )
   end
 
   def contact(conn, _params), do: render(conn, :contact)

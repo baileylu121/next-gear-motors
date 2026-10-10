@@ -1,5 +1,5 @@
 <div>
-  <h2 class="text-xl font-semibold text-zinc-200 mt-10 text-center">
+  <h2 class="font-display text-xl font-semibold tracking-tight text-zinc-950 mt-10 text-center">
     Messages
   </h2>
 
@@ -7,9 +7,9 @@
     <div
       :for={{id, message} <- @streams.messages}
       id={id}
-      class="my-6 transform-gpu transition-transform duration-300 ease-in-out hover:scale-105 hover:border-zinc-300"
+      class="my-6 rounded-2xl border border-zinc-200 bg-white shadow-card overflow-hidden transform-gpu transition-transform duration-300 ease-in-out hover:scale-[1.01] hover:border-raw-sienna-300"
     >
-      <div class="flex flex-row justify-between items-center bg-zinc-900/50 p-2 text-sm min-h-14">
+      <div class="flex flex-row justify-between items-center bg-zinc-100 p-2 text-sm min-h-14 font-sans text-zinc-700">
         <p class="font-semibold" title={message.from.email}>
           {shorten_text(message.from.email, 15)}
         </p>
@@ -36,7 +36,7 @@
           </.link>
         </div>
       </div>
-      <div class="p-4 bg-zinc-800/50">
+      <div class="p-4 bg-white font-sans text-zinc-700">
         <markdown-block>{message.text}</markdown-block>
       </div>
     </div>
@@ -54,7 +54,6 @@
       field={@form[:text]}
       value={@message_text}
       placeholder="Enter Message... (Supports Markdown)"
-      class="bg-zinc-800/50 rounded-none placeholder:text-neutral-600 border-none"
     />
     <.input field={@form[:rate_limiting]} type="hidden" />
     <:actions>

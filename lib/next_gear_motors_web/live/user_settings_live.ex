@@ -5,94 +5,101 @@ defmodule NextGearMotorsWeb.UserSettingsLive do
 
   def render(assigns) do
     ~H"""
-    <.header class="text-center">
-      Account Settings
-      <:subtitle>Manage your account email address and password settings</:subtitle>
-    </.header>
+    <div class="mx-auto max-w-2xl px-4 py-12">
+      <.header class="text-center">
+        Account Settings
+        <:subtitle>Manage your account email address and password settings</:subtitle>
+      </.header>
 
-    <div class="space-y-12">
-      <div class="pt-12">
-        <h2 class="font-semibold">Account Confirmation Status:</h2>
-        <%= if @current_user.confirmed_at do %>
-          <p>Your account has been successfully confirmed!</p>
-        <% else %>
-          <p>
-            Your account has not yet been been successfully confirmed - please
-            <.link navigate={~p"/users/confirm"} class="text-blue-400 hover:underline">
-              click here
-            </.link>
-            to confirm.
-          </p>
-        <% end %>
-      </div>
+      <div class="mt-10 space-y-6">
+        <div class="rounded-2xl border border-zinc-200 bg-white p-6 md:p-8 shadow-card">
+          <h2 class="font-display text-lg font-semibold text-zinc-950">
+            Account Confirmation Status
+          </h2>
+          <%= if @current_user.confirmed_at do %>
+            <p>Your account has been successfully confirmed!</p>
+          <% else %>
+            <p>
+              Your account has not yet been been successfully confirmed - please
+              <.link
+                navigate={~p"/users/confirm"}
+                class="text-raw-sienna-700 font-semibold hover:underline"
+              >
+                click here
+              </.link>
+              to confirm.
+            </p>
+          <% end %>
+        </div>
 
-      <div>
-        <h2 class="font-semibold">Update Email Address:</h2>
-        <.simple_form
-          for={@email_form}
-          id="email_form"
-          phx-submit="update_email"
-          phx-change="validate_email"
-        >
-          <.input field={@email_form[:email]} type="email" label="Email" required />
-          <.input
-            field={@email_form[:current_password]}
-            name="current_password"
-            id="current_password_for_email"
-            type="password"
-            label="Current password"
-            value={@email_form_current_password}
-            required
-          />
-          <:actions>
-            <.button phx-disable-with="Changing...">Change Email</.button>
-          </:actions>
-        </.simple_form>
-      </div>
-      <div>
-        <h2 class="font-semibold">Update Password:</h2>
-        <.simple_form
-          for={@password_form}
-          id="password_form"
-          action={~p"/users/log_in?_action=password_updated"}
-          method="post"
-          phx-change="validate_password"
-          phx-submit="update_password"
-          phx-trigger-action={@trigger_submit}
-        >
-          <input
-            name={@password_form[:email].name}
-            type="hidden"
-            id="hidden_user_email"
-            value={@current_email}
-          />
-          <.input field={@password_form[:password]} type="password" label="New password" required />
-          <.input
-            field={@password_form[:password_confirmation]}
-            type="password"
-            label="Confirm new password"
-          />
-          <.input
-            field={@password_form[:current_password]}
-            name="current_password"
-            type="password"
-            label="Current password"
-            id="current_password_for_password"
-            value={@current_password}
-            required
-          />
-          <:actions>
-            <.button phx-disable-with="Changing...">Change Password</.button>
-          </:actions>
-        </.simple_form>
-      </div>
-      <div>
-        <h2 class="font-semibold mb-6">Delete Account:</h2>
-        <.link phx-click={JS.push("delete_account")} data-confirm="Are you sure?">
-          <.button preset={:semi_transparent}>
-            Delete Account
-          </.button>
-        </.link>
+        <div class="rounded-2xl border border-zinc-200 bg-white p-6 md:p-8 shadow-card">
+          <h2 class="font-display text-lg font-semibold text-zinc-950">Update Email Address</h2>
+          <.simple_form
+            for={@email_form}
+            id="email_form"
+            phx-submit="update_email"
+            phx-change="validate_email"
+          >
+            <.input field={@email_form[:email]} type="email" label="Email" required />
+            <.input
+              field={@email_form[:current_password]}
+              name="current_password"
+              id="current_password_for_email"
+              type="password"
+              label="Current password"
+              value={@email_form_current_password}
+              required
+            />
+            <:actions>
+              <.button phx-disable-with="Changing...">Change Email</.button>
+            </:actions>
+          </.simple_form>
+        </div>
+        <div class="rounded-2xl border border-zinc-200 bg-white p-6 md:p-8 shadow-card">
+          <h2 class="font-display text-lg font-semibold text-zinc-950">Update Password</h2>
+          <.simple_form
+            for={@password_form}
+            id="password_form"
+            action={~p"/users/log_in?_action=password_updated"}
+            method="post"
+            phx-change="validate_password"
+            phx-submit="update_password"
+            phx-trigger-action={@trigger_submit}
+          >
+            <input
+              name={@password_form[:email].name}
+              type="hidden"
+              id="hidden_user_email"
+              value={@current_email}
+            />
+            <.input field={@password_form[:password]} type="password" label="New password" required />
+            <.input
+              field={@password_form[:password_confirmation]}
+              type="password"
+              label="Confirm new password"
+            />
+            <.input
+              field={@password_form[:current_password]}
+              name="current_password"
+              type="password"
+              label="Current password"
+              id="current_password_for_password"
+              value={@current_password}
+              required
+            />
+            <:actions>
+              <.button phx-disable-with="Changing...">Change Password</.button>
+            </:actions>
+          </.simple_form>
+        </div>
+        <div class="rounded-2xl border border-zinc-200 bg-white p-6 md:p-8 shadow-card">
+          <h2 class="font-display text-lg font-semibold text-zinc-950 mb-4">Delete Account</h2>
+          <.link phx-click={JS.push("delete_account")} data-confirm="Are you sure?">
+            <.button preset={:semi_transparent}>
+              Delete Account
+            </.button>
+          </.link>
+        </div>
       </div>
     </div>
     """
