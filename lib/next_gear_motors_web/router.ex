@@ -44,12 +44,25 @@ defmodule NextGearMotorsWeb.Router do
     post("/users/log_in", UserSessionController, :create)
   end
 
+  live_session :vehicles, on_mount: [{NextGearMotorsWeb.UserAuth, :mount_current_user}] do
+    scope "/", NextGearMotorsWeb do
+      pipe_through([:browser, :require_admin_user])
+
+      live("/vehicles/new", VehicleLive.Index, :new)
+      live("/vehicles/:id/edit", VehicleLive.Index, :edit)
+      live("/vehicles/:id/show/edit", VehicleLive.Show, :edit)
+    end
+
+    scope "/", NextGearMotorsWeb do
+      pipe_through(:browser)
+
+      live("/vehicles", VehicleLive.Index, :index)
+      live("/vehicles/:id", VehicleLive.Show, :show)
+    end
+  end
+
   scope "/", NextGearMotorsWeb do
     pipe_through([:browser, :require_admin_user])
-
-    live("/vehicles/new", VehicleLive.Index, :new)
-    live("/vehicles/:id/edit", VehicleLive.Index, :edit)
-    live("/vehicles/:id/show/edit", VehicleLive.Show, :edit)
 
     live_dashboard "/dashboard",
       metrics: NextGearMotorsWeb.Telemetry,
@@ -86,9 +99,6 @@ defmodule NextGearMotorsWeb.Router do
     get("/about", PageController, :about)
     get("/privacy", PageController, :privacy)
     get("/cookies", PageController, :cookies)
-
-    live("/vehicles", VehicleLive.Index, :index)
-    live("/vehicles/:id", VehicleLive.Show, :show)
 
     get("/*path", PageController, :not_found)
   end

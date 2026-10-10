@@ -41,7 +41,9 @@ defmodule NextGearMotorsWeb.VehicleLive.Index do
   end
 
   defp apply_action(socket, :new, params) do
-    if socket.assigns.current_user.is_admin do
+    current_user = socket.assigns.current_user
+
+    if current_user && current_user.is_admin do
       socket
       |> assign(:page_title, "New Vehicle")
       |> assign(:vehicle, %Vehicle{})
@@ -103,7 +105,9 @@ defmodule NextGearMotorsWeb.VehicleLive.Index do
   end
 
   def handle_event("delete", %{"id" => id}, socket) do
-    if socket.assigns.current_user.is_admin do
+    current_user = socket.assigns.current_user
+
+    if current_user && current_user.is_admin do
       vehicle = Vehicles.get_vehicle!(id)
       {:ok, _} = Vehicles.delete_vehicle(vehicle)
 

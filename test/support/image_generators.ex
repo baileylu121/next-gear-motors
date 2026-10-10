@@ -63,6 +63,6 @@ defmodule NextGearMotors.ImageGenerators do
   end
 
   def batch_sizes do
-    StreamData.integer(1..20)
+    StreamData.integer(1..30)
   end
 end

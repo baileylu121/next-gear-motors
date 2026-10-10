@@ -15,10 +15,27 @@ defmodule NextGearMotorsWeb.VehicleLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
-    {:noreply,
-     socket
-     |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:vehicle, Vehicles.get_vehicle!(id))}
+    {:noreply, apply_action(socket, socket.assigns.live_action, id)}
+  end
+
+  defp apply_action(socket, :edit, id) do
+    current_user = socket.assigns.current_user
+
+    if current_user && current_user.is_admin do
+      socket
+      |> assign(:page_title, page_title(:edit))
+      |> assign(:vehicle, Vehicles.get_vehicle!(id))
+    else
+      socket
+      |> put_flash(:error, "You must be an admin to access this resource.")
+      |> push_patch(to: ~p"/vehicles/#{id}")
+    end
+  end
+
+  defp apply_action(socket, :show, id) do
+    socket
+    |> assign(:page_title, page_title(:show))
+    |> assign(:vehicle, Vehicles.get_vehicle!(id))
   end
 
   @impl true

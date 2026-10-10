@@ -39,7 +39,7 @@ defmodule NextGearMotorsWeb.ImagesUploadPropertyTest do
   describe "image upload fault tolerance" do
     setup [:register_log_in_and_promote_user]
 
-    property "batch of 1..20 valid uploads always reaches :finished", %{conn: conn} do
+    property "batch of 1..30 valid uploads always reaches :finished", %{conn: conn} do
       check all(n <- ImageGenerators.batch_sizes(), max_runs: 10) do
         bytes = ImageGenerators.valid_jpeg_bytes()
 

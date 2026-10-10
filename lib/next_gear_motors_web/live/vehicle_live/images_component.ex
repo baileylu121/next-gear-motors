@@ -92,7 +92,7 @@ defmodule NextGearMotorsWeb.VehicleLive.ImagesComponent do
      |> assign(:in_progress_covers, MapSet.new())
      |> allow_upload(:covers,
        accept: ~w(.png .jpg .jpeg),
-       max_entries: 20,
+       max_entries: 30,
        max_file_size: 12_000_000,
        chunk_size: 128_000,
        chunk_timeout: 30_000,

@@ -58,6 +58,17 @@ defmodule NextGearMotorsWeb.VehicleLiveTest do
       refute has_element?(index_live, "a", "New Vehicle")
     end
 
+    test "cannot open the new vehicle modal through live navigation", %{conn: conn} do
+      {:ok, index_live, _html} = live(conn, ~p"/vehicles")
+
+      render_patch(index_live, ~p"/vehicles/new")
+
+      assert_patch(index_live, ~p"/vehicles")
+
+      refute has_element?(index_live, "#vehicle-form")
+      assert render(index_live) =~ "You must be an admin to access this resource."
+    end
+
     test "has no edit button", %{conn: conn, vehicle: vehicle} do
       {:ok, index_live, _html} = live(conn, ~p"/vehicles")
 
@@ -204,6 +215,20 @@ defmodule NextGearMotorsWeb.VehicleLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/vehicles")
 
       refute has_element?(index_live, "a", "Edit")
+    end
+
+    test "cannot open the edit modal through live navigation", %{conn: conn, vehicle: vehicle} do
+      {:ok, show_live, _html} = live(conn, ~p"/vehicles/#{vehicle}")
+
+      render_patch(show_live, ~p"/vehicles/#{vehicle}/show/edit")
+
+      assert_patch(show_live, ~p"/vehicles/#{vehicle}")
+
+      html = render(show_live)
+
+      refute html =~ "Edit Vehicle"
+      refute has_element?(show_live, "#vehicle-form")
+      assert html =~ "You must be an admin to access this resource."
     end
   end
 

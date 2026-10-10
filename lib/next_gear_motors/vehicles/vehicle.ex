@@ -53,6 +53,6 @@ defmodule NextGearMotors.Vehicles.Vehicle do
     |> validate_format(:price, ~r/^€[0-9|,|\.]*$/,
       message: "must be a number in euro - i.e. '€19,999.99'"
     )
-    |> validate_length(:covers, min: 1, max: 20)
+    |> validate_length(:covers, min: 1, max: 30)
   end
 end
