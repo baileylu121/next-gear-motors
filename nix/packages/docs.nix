@@ -12,7 +12,7 @@ pkgs.beamPackages.mixRelease {
   pname = "docs";
   version = flake.lib.readMixVersion ../../mix.exs;
 
-  src = flake;
+  src = flake.lib.nixSrc;
 
   removeCookie = false;
   stripDebug = true;

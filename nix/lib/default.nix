@@ -24,6 +24,22 @@ eachSystem (
     assert lib.assertMsg (matches != null) "No match could be found for mix.exs version field";
     builtins.head matches;
 
+  nixSrc = lib.fileset.toSource {
+    root = ./../..;
+    fileset = lib.fileset.unions [
+      ./../../assets
+      ./../../config
+      ./../../lib
+      ./../../priv
+      ./../../test
+      ./../../mix.exs
+      ./../../mix.lock
+      ./../../deps.nix
+      ./../../README.md
+      ./../../LICENSE.txt
+    ];
+  };
+
   mixNixDeps =
     pkgs:
     pkgs.callPackages (flake + "/deps.nix") {

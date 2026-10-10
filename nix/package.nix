@@ -12,7 +12,7 @@ pkgs.beamPackages.mixRelease rec {
   pname = "next_gear_motors";
   version = flake.lib.readMixVersion (flake + "/mix.exs");
 
-  src = flake;
+  src = flake.lib.nixSrc;
 
   removeCookie = false;
   stripDebug = true;
