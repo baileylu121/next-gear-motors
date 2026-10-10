@@ -1507,6 +1507,23 @@ let
         in
         drv;
 
+      stream_data =
+        let
+          version = "1.4.0";
+          drv = buildMix {
+            inherit version;
+            name = "stream_data";
+            appConfigPath = ./config;
+
+            src = fetchHex {
+              inherit version;
+              pkg = "stream_data";
+              sha256 = "2b0ee3a340dcce1c8cf6302a763ee757d1e01c54d6e16d9069062509d68b1dc9";
+            };
+          };
+        in
+        drv;
+
       sweet_xml =
         let
           version = "0.7.5";

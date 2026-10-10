@@ -80,6 +80,7 @@ defmodule NextGearMotors.MixProject do
       {:phoenix_live_view, "~> 1.2.12", override: true},
       {:postgrex, ">= 0.0.0"},
       {:sobelow, "~> 0.13", runtime: false},
+      {:stream_data, "~> 1.1", only: :test},
       {:sweet_xml, "~> 0.6"},
       {:swoosh, "~> 1.5"},
       {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},

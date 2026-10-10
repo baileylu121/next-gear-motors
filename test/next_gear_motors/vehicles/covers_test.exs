@@ -1,6 +1,8 @@
 defmodule NextGearMotors.Vehicles.CoversTest do
   use NextGearMotors.DataCase
+  use ExUnitProperties
 
+  alias NextGearMotors.ImageGenerators
   alias NextGearMotors.Vehicles.Covers.Cover
 
   setup do
@@ -19,6 +21,39 @@ defmodule NextGearMotors.Vehicles.CoversTest do
 
     test "store creates an image" do
       {:ok, "car.jpg"} = Cover.store(@img)
+    end
+
+    property "store never raises on random bytes" do
+      check all(bytes <- ImageGenerators.corrupt_bytes(), max_runs: 25) do
+        {tmp, upload} = ImageGenerators.plug_upload(bytes, "random.jpg", "image/jpeg")
+        ImageGenerators.register_cleanup(tmp)
+
+        assert (case Cover.store(upload) do
+                  {:ok, _} -> true
+                  {:error, _} -> true
+                end)
+      end
+    end
+
+    property "store never raises on truncated jpeg bytes" do
+      {half, spliced} = ImageGenerators.truncated_jpeg()
+
+      check all(bytes <- StreamData.member_of([half, spliced]), max_runs: 2) do
+        {tmp, upload} = ImageGenerators.plug_upload(bytes, "trunc.jpg", "image/jpeg")
+        ImageGenerators.register_cleanup(tmp)
+
+        assert (case Cover.store(upload) do
+                  {:ok, _} -> true
+                  {:error, _} -> true
+                end)
+      end
+    end
+
+    test "empty input is an error tuple, not a crash" do
+      {tmp, upload} = ImageGenerators.plug_upload(<<>>, "empty.jpg", "image/jpeg")
+      ImageGenerators.register_cleanup(tmp)
+
+      assert {:error, _} = Cover.store(upload)
     end
   end
 end

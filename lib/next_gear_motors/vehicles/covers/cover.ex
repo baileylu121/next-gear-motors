@@ -34,7 +34,7 @@ defmodule NextGearMotors.Vehicles.Covers.Cover do
     with {:ok, image} <- Image.open(file.path),
          {:ok, {image, _flags}} <- Image.autorotate(image),
          {:ok, _image} <-
-           Image.write(image, new_path, strip_metadata: true, minimize_file_size: true, effort: 8) do
+           Image.write(image, new_path, strip_metadata: true, minimize_file_size: true, effort: 4) do
       {:ok,
        %Waffle.File{
          file

@@ -2,6 +2,7 @@ defmodule NextGearMotorsWeb.VehicleLive.ImagesComponent do
   use NextGearMotorsWeb, :live_component
 
   alias NextGearMotors.Vehicles.Covers.Cover
+  alias NextGearMotors.Vehicles.Covers
 
   import NextGearMotorsWeb.VehicleHelper
 
@@ -21,7 +22,6 @@ defmodule NextGearMotorsWeb.VehicleLive.ImagesComponent do
       <section id="upload-entries">
         <article
           :for={entry <- @uploads.covers.entries}
-          :if={entry.done?}
           class="p-4 bg-zinc-800/50 rounded-3xl border border-zinc-600 flex flex-col items-center shadow-xl my-8"
         >
           <button
@@ -90,6 +90,9 @@ defmodule NextGearMotorsWeb.VehicleLive.ImagesComponent do
      |> allow_upload(:covers,
        accept: ~w(.png .jpg .jpeg),
        max_entries: 20,
+       max_file_size: 12_000_000,
+       chunk_size: 128_000,
+       chunk_timeout: 30_000,
        auto_upload: true,
        progress: &handle_progress/3
      )}
@@ -117,6 +120,29 @@ defmodule NextGearMotorsWeb.VehicleLive.ImagesComponent do
      |> cancel_upload(:covers, ref)}
   end
 
+  def update(%{:data => {:retry_image_processing, ref, attempt}}, socket) do
+    send(self(), {:put_flash, [:info, "Image #{ref} failed, retrying (attempt #{attempt})..."]})
+
+    {:ok, socket}
+  end
+
+  def update(%{:data => {:fail_image_processing, ref, reason}}, socket) do
+    send(self(), {:put_flash, [:error, "Image #{ref} failed - #{inspect(reason)}"]})
+
+    in_progress_covers = MapSet.delete(socket.assigns.in_progress_covers, ref)
+
+    if MapSet.size(in_progress_covers) == 0 do
+      send_update(socket.assigns.parent, covers_progress: :finished)
+    else
+      send_update(socket.assigns.parent, covers_progress: :unfinished)
+    end
+
+    {:ok,
+     socket
+     |> assign(:in_progress_covers, in_progress_covers)
+     |> cancel_upload(:covers, ref)}
+  end
+
   def update(assigns, socket), do: {:ok, assign(socket, assigns)}
 
   defp to_waffle_ecto_type_array(covers) do
@@ -129,13 +155,11 @@ defmodule NextGearMotorsWeb.VehicleLive.ImagesComponent do
   defp handle_progress(:covers, entry, socket) do
     if entry.done? do
       async_upload_waffle_file(socket, entry)
-
-      {:noreply, socket}
-    else
-      in_progress_covers = MapSet.put(socket.assigns.in_progress_covers, entry.ref)
-
-      {:noreply, assign(socket, :in_progress_covers, in_progress_covers)}
     end
+
+    in_progress_covers = MapSet.put(socket.assigns.in_progress_covers, entry.ref)
+
+    {:noreply, assign(socket, :in_progress_covers, in_progress_covers)}
   end
 
   defp async_upload_waffle_file(socket, %Phoenix.LiveView.UploadEntry{} = entry) do
@@ -153,13 +177,34 @@ defmodule NextGearMotorsWeb.VehicleLive.ImagesComponent do
           path: meta.path
         }
 
-        {:ok, cover} = Cover.store(cover)
-
-        send_update(lv, socket.assigns.myself, data: {:finish_image_processing, entry.ref, cover})
+        report_store_result(
+          lv,
+          socket.assigns.myself,
+          entry.ref,
+          store_cover(cover, entry.ref, lv, socket.assigns.myself)
+        )
       end)
 
       {:postpone, :ok}
     end)
+  end
+
+  defp store_cover(cover, ref, lv, myself) do
+    Covers.store_with_retries(cover,
+      on_retry: fn attempt ->
+        send_update(lv, myself, data: {:retry_image_processing, ref, attempt})
+      end
+    )
+  end
+
+  defp report_store_result(lv, myself, ref, {:ok, stored}) do
+    send_update(lv, myself, data: {:finish_image_processing, ref, stored})
+  end
+
+  defp report_store_result(lv, myself, ref, {:error, reason}) do
+    require Logger
+    Logger.warning("cover store failed ref=#{ref} reason=#{inspect(reason)}")
+    send_update(lv, myself, data: {:fail_image_processing, ref, reason})
   end
 
   @impl true
@@ -172,24 +217,45 @@ defmodule NextGearMotorsWeb.VehicleLive.ImagesComponent do
   end
 
   def handle_event("cancel-upload", %{"ref" => ref}, socket) do
-    {:noreply,
-     socket
-     |> delete_cover(ref)
-     |> cancel_upload(:covers, ref)}
+    socket =
+      socket
+      |> delete_cover(ref)
+      |> assign(:in_progress_covers, MapSet.delete(socket.assigns.in_progress_covers, ref))
+      |> cancel_upload(:covers, ref)
+
+    if MapSet.size(socket.assigns.in_progress_covers) == 0 do
+      send_update(socket.assigns.parent, covers_progress: :finished)
+    else
+      send_update(socket.assigns.parent, covers_progress: :unfinished)
+    end
+
+    {:noreply, socket}
   end
 
   def handle_event("delete-cover", %{"ref" => ref}, socket) do
     cover = Map.get(socket.assigns.covers, ref)
 
     if cover do
-      Task.async(fn ->
-        Cover.delete(cover)
+      Task.Supervisor.start_child(NextGearMotors.TaskSupervisor, fn ->
+        try do
+          Cover.delete(cover)
+        rescue
+          e ->
+            require Logger
+            Logger.warning("cover delete failed ref=#{ref} reason=#{inspect(e)}")
+        end
       end)
     end
 
     socket = delete_cover(socket, ref)
 
     send_update(socket.assigns.parent, covers: to_waffle_ecto_type_array(socket.assigns.covers))
+
+    if MapSet.size(socket.assigns.in_progress_covers) == 0 do
+      send_update(socket.assigns.parent, covers_progress: :finished)
+    else
+      send_update(socket.assigns.parent, covers_progress: :unfinished)
+    end
 
     {:noreply, socket}
   end
@@ -205,5 +271,6 @@ defmodule NextGearMotorsWeb.VehicleLive.ImagesComponent do
   defp error_to_string(:not_accepted), do: "You have selected an unacceptable file type"
   defp error_to_string(:too_many_files), do: "You have selected too many files"
   defp error_to_string(:external_client_failure), do: "Something went terribly wrong"
-  defp error_to_string({:writer_failiure, reason}), do: "Failed writing image - #{reason}"
+  defp error_to_string({:writer_failure, reason}), do: "Failed writing image - #{reason}"
+  defp error_to_string(term), do: "Upload failed - #{inspect(term)}"
 end

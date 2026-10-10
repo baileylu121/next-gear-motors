@@ -13,7 +13,7 @@ pkgs.beamPackages.mixRelease {
   pname = "passes-mix-test";
   version = flake.lib.readMixVersion ../../mix.exs;
 
-  src = flake;
+  src = flake.lib.nixSrc;
 
   env = {
     DATABASE_URL = "postgres://localhost/next_gear_motors";

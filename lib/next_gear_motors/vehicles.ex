@@ -104,11 +104,16 @@ defmodule NextGearMotors.Vehicles do
 
   """
   def update_vehicle(%Vehicle{} = vehicle, attrs) do
+    require Logger
     covers = get_covers_from_attrs(attrs)
 
     if covers && !Enum.empty?(covers) && covers != vehicle.covers do
       for cover <- vehicle.covers do
-        Cover.delete({cover, vehicle})
+        try do
+          Cover.delete({cover, vehicle})
+        rescue
+          e -> Logger.warning("cover delete failed reason=#{inspect(e)}")
+        end
       end
     end
 
