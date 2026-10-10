@@ -729,6 +729,28 @@ let
         in
         drv;
 
+      flop =
+        let
+          version = "0.29.0";
+          drv = buildMix {
+            inherit version;
+            name = "flop";
+            appConfigPath = ./config;
+
+            src = fetchHex {
+              inherit version;
+              pkg = "flop";
+              sha256 = "44dfcb21fad277122d1536d08d4550a4ec2d8476a2b2f54dcf8ab33fe165e356";
+            };
+
+            beamDeps = [
+              ecto
+              nimble_options
+            ];
+          };
+        in
+        drv;
+
       gettext =
         let
           version = "1.0.2";

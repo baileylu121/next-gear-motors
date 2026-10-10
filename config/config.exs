@@ -11,6 +11,8 @@ config :next_gear_motors,
   ecto_repos: [NextGearMotors.Repo],
   generators: [timestamp_type: :utc_datetime, binary_id: true]
 
+config :flop, repo: NextGearMotors.Repo
+
 # Configures the endpoint
 config :next_gear_motors, NextGearMotorsWeb.Endpoint,
   url: [host: "localhost"],

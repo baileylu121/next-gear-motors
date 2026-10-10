@@ -1,4 +1,4 @@
-<section class="bg-linear-to-br from-cream via-parchment to-raw-sienna-100 border-b border-zinc-200">
+<section class="border-b border-zinc-200 bg-cream">
   <article class="mx-auto flex max-w-7xl flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-4 py-12">
     <div>
       <p class="font-sans text-xs font-bold uppercase tracking-[0.18em] text-raw-sienna-700">
@@ -15,6 +15,61 @@
       <.button>New Vehicle</.button>
     </.link>
   </article>
+</section>
+
+<section class="mx-auto max-w-7xl px-4 pt-8">
+  <.form
+    for={@filter_form}
+    id="vehicle-filters"
+    phx-change="filter"
+    phx-submit="filter"
+    class="rounded-2xl border border-zinc-200 bg-white p-4 shadow-card sm:p-5"
+  >
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-end">
+      <div class="flex-1">
+        <.input
+          field={@filter_form[:q]}
+          type="search"
+          label="Search"
+          placeholder="Search name, make, or keyword…"
+          autocomplete="off"
+          phx-debounce="300"
+        />
+      </div>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:w-[440px] lg:shrink-0">
+        <.input
+          field={@filter_form[:manufacturer]}
+          type="select"
+          label="Make"
+          prompt="All makes"
+          options={@manufacturers}
+        />
+        <.input
+          field={@filter_form[:sort]}
+          type="select"
+          label="Sort"
+          options={[
+            {"Newest first", "newest"},
+            {"Name A–Z", "name_az"},
+            {"Name Z–A", "name_za"},
+            {"Make A–Z", "make_az"}
+          ]}
+        />
+      </div>
+    </div>
+    <div class="mt-4 flex items-center justify-between border-t border-zinc-100 pt-3">
+      <p id="vehicle-count" class="font-sans text-sm text-zinc-500">
+        {if @vehicle_count == 1, do: "1 vehicle", else: "#{@vehicle_count} vehicles"}
+      </p>
+      <.link
+        :if={@filtering}
+        patch={~p"/vehicles"}
+        class="rounded-full border border-zinc-200 px-3 py-1 font-sans text-sm font-semibold text-zinc-600 transition hover:border-raw-sienna-300 hover:text-raw-sienna-700"
+      >
+        Clear filters
+      </.link>
+    </div>
+  </.form>
 </section>
 
 <article
@@ -34,7 +89,11 @@
     id={id}
     class="overflow-hidden p-0 hover:shadow-lift hover:border-raw-sienna-300 hover:-translate-y-1 transition duration-300 flex flex-col"
   >
-    <.link navigate={~p"/vehicles/#{vehicle}"} title={"More Details - #{vehicle.name}"}>
+    <.link
+      navigate={~p"/vehicles/#{vehicle}"}
+      title={"More Details - #{vehicle.name}"}
+      class="block"
+    >
       <div class="aspect-[16/10] w-full overflow-hidden bg-parchment">
         <img
           :if={cover = Enum.at(vehicle.covers, 0)}
@@ -50,49 +109,70 @@
           <.logo class="w-20 opacity-40" />
         </div>
       </div>
-      <div class="flex flex-1 flex-col p-5">
-        <div class="flex flex-row w-full gap-4 justify-between items-start">
+    </.link>
+    <div class="flex flex-1 flex-col p-5">
+      <div class="flex flex-row w-full gap-4 justify-between items-start">
+        <.link
+          navigate={~p"/vehicles/#{vehicle}"}
+          title={"More Details - #{vehicle.name}"}
+          class="min-w-0 flex-1"
+        >
           <h2 class="font-display text-xl font-semibold tracking-tight text-zinc-950 hover:underline">
             {vehicle.name}
           </h2>
-          <div class="flex flex-row gap-2 shrink-0">
-            <.link
-              :if={@current_user && @current_user.is_admin}
-              id={"#{id}-edit"}
-              patch={~p"/vehicles/#{vehicle}/edit"}
-              title="Edit Vehicle"
-            >
-              <.icon name="hero-pencil-square" class="hover:text-green-500 my-1" />
-            </.link>
-            <.link
-              :if={@current_user && @current_user.is_admin}
-              id={"#{id}-delete"}
-              phx-click={JS.push("delete", value: %{id: vehicle.id}) |> hide("##{id}")}
-              data-confirm="Are you sure?"
-              title="Delete Vehicle"
-            >
-              <.icon name="hero-x-mark" class="hover:text-red-500 my-1" />
-            </.link>
-          </div>
-        </div>
-        <p class="mt-1 font-sans text-sm text-zinc-500">{vehicle.manufacturer}</p>
-        <div class="mt-4 flex flex-row items-center justify-between border-t border-zinc-100 pt-4">
-          <p class="font-display text-2xl font-semibold tracking-tight text-zinc-950">
-            {vehicle.price}
-          </p>
-          <p class="font-sans text-sm font-semibold text-raw-sienna-700">
-            View details →
-          </p>
+        </.link>
+        <div class="flex flex-row gap-2 shrink-0">
+          <.link
+            :if={@current_user && @current_user.is_admin}
+            id={"#{id}-edit"}
+            patch={~p"/vehicles/#{vehicle}/edit"}
+            title="Edit Vehicle"
+          >
+            <.icon name="hero-pencil-square" class="hover:text-green-500 my-1" />
+          </.link>
+          <.link
+            :if={@current_user && @current_user.is_admin}
+            id={"#{id}-delete"}
+            phx-click={JS.push("delete", value: %{id: vehicle.id}) |> hide("##{id}")}
+            data-confirm="Are you sure?"
+            title="Delete Vehicle"
+          >
+            <.icon name="hero-x-mark" class="hover:text-red-500 my-1" />
+          </.link>
         </div>
       </div>
-    </.link>
+      <p class="mt-1 font-sans text-sm text-zinc-500">{vehicle.manufacturer}</p>
+      <div class="mt-4 flex flex-row items-center justify-between border-t border-zinc-100 pt-4">
+        <p class="font-display text-2xl font-semibold tracking-tight text-zinc-950">
+          {vehicle.price}
+        </p>
+        <.link
+          navigate={~p"/vehicles/#{vehicle}"}
+          title={"More Details - #{vehicle.name}"}
+          class="font-sans text-sm font-semibold text-raw-sienna-700"
+        >
+          View details →
+        </.link>
+      </div>
+    </div>
   </.box>
-  <p
+  <div
     class="hidden first:block col-span-full rounded-2xl border border-zinc-200 bg-white p-10 text-center font-sans text-zinc-600 shadow-card"
     id="empty-list-message"
   >
-    No vehicles are currently available! Please check back later.
-  </p>
+    <p>
+      {if @filtering,
+        do: "No vehicles match your search or filters.",
+        else: "No vehicles are currently available! Please check back later."}
+    </p>
+    <.link
+      :if={@filtering}
+      patch={~p"/vehicles"}
+      class="mt-4 inline-block rounded-full bg-raw-sienna-600 px-4 py-2 font-sans text-sm font-semibold text-white transition hover:bg-raw-sienna-700"
+    >
+      Clear filters
+    </.link>
+  </div>
 </article>
 
 <.modal

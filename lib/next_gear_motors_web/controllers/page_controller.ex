@@ -8,6 +8,7 @@ defmodule NextGearMotorsWeb.PageController do
       layout: false,
       featured_vehicles:
         NextGearMotors.Vehicles.list_vehicles()
+        |> elem(0)
         |> Enum.filter(&(Map.get(&1, :covers, []) != []))
         |> Enum.take(3)
     )

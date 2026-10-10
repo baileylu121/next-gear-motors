@@ -7,10 +7,21 @@ defmodule NextGearMotors.Vehicles.Vehicle do
 
   use Ecto.Schema
   use Waffle.Ecto.Schema
+  use Flop.Schema
   import Ecto.Changeset
 
   alias NextGearMotors.Vehicles.Covers.Cover
   alias NextGearMotors.Vehicles.Vehicle.UploadsStatusType
+
+  @flop_options [
+    filterable: [:search, :manufacturer],
+    sortable: [:name, :manufacturer, :inserted_at, :id],
+    default_limit: false,
+    default_order: %{order_by: [:inserted_at, :id], order_directions: [:desc, :desc]},
+    adapter_opts: [
+      compound_fields: [search: [:name, :manufacturer, :description]]
+    ]
+  ]
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id

@@ -69,6 +69,55 @@ defmodule NextGearMotorsWeb.VehicleLiveTest do
 
       refute has_element?(index_live, "#vehicles-#{vehicle.id}-delete a")
     end
+
+    test "search query param filters the grid", %{conn: conn, vehicle: vehicle} do
+      vehicle_fixture(%{
+        name: "Honda Civic",
+        manufacturer: "Honda",
+        description: "zippy hatchback",
+        price: "€20,000"
+      })
+
+      {:ok, _index_live, html} = live(conn, ~p"/vehicles?q=civic")
+
+      assert html =~ "Honda Civic"
+      refute html =~ vehicle.name
+    end
+
+    test "manufacturer param filters and shows count", %{conn: conn, vehicle: vehicle} do
+      vehicle_fixture(%{
+        name: "Honda Civic",
+        manufacturer: "Honda",
+        description: "zippy hatchback",
+        price: "€20,000"
+      })
+
+      {:ok, index_live, _html} = live(conn, ~p"/vehicles?manufacturer=Honda")
+
+      assert render(index_live) =~ "Honda Civic"
+      refute render(index_live) =~ vehicle.name
+      assert render(index_live) =~ "1 vehicle"
+    end
+
+    test "filter form change patches the URL", %{conn: conn} do
+      {:ok, index_live, _html} = live(conn, ~p"/vehicles")
+
+      index_live
+      |> form("#vehicle-filters", %{q: "civic"})
+      |> render_change()
+
+      assert_patch(index_live, ~p"/vehicles?q=civic")
+    end
+
+    test "clear filters link appears while filtering", %{conn: conn} do
+      {:ok, filtering_live, _html} = live(conn, ~p"/vehicles?q=civic")
+
+      assert has_element?(filtering_live, "a", "Clear filters")
+
+      {:ok, clean_live, _html} = live(conn, ~p"/vehicles")
+
+      refute has_element?(clean_live, "a", "Clear filters")
+    end
   end
 
   describe "Logged in Index" do

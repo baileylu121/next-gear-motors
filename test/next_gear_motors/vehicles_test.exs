@@ -24,7 +24,121 @@ defmodule NextGearMotors.VehiclesTest do
 
     test "list_vehicles/0 returns all vehicles" do
       vehicle = vehicle_fixture()
-      assert Vehicles.list_vehicles() == [vehicle]
+      assert {vehicles, %Flop.Meta{}} = Vehicles.list_vehicles()
+      assert vehicles == [vehicle]
+    end
+
+    test "search finds a vehicle by name case-insensitively" do
+      civic =
+        vehicle_fixture(%{
+          name: "Honda Civic",
+          manufacturer: "Honda",
+          description: "zippy hatchback"
+        })
+
+      _other =
+        vehicle_fixture(%{name: "Ford Focus", manufacturer: "Ford", description: "family car"})
+
+      assert {vehicles, %Flop.Meta{}} = Vehicles.list_vehicles(%{q: "civic"})
+      assert Enum.map(vehicles, & &1.id) == [civic.id]
+    end
+
+    test "search finds a vehicle by manufacturer" do
+      civic =
+        vehicle_fixture(%{
+          name: "Honda Civic",
+          manufacturer: "Honda",
+          description: "zippy hatchback"
+        })
+
+      _other =
+        vehicle_fixture(%{name: "Ford Focus", manufacturer: "Ford", description: "family car"})
+
+      assert {vehicles, %Flop.Meta{}} = Vehicles.list_vehicles(%{"q" => "honda"})
+      assert Enum.map(vehicles, & &1.id) == [civic.id]
+    end
+
+    test "search finds a vehicle by description keyword" do
+      civic =
+        vehicle_fixture(%{
+          name: "Honda Civic",
+          manufacturer: "Honda",
+          description: "zippy hatchback"
+        })
+
+      _other =
+        vehicle_fixture(%{name: "Ford Focus", manufacturer: "Ford", description: "family car"})
+
+      assert {vehicles, %Flop.Meta{}} = Vehicles.list_vehicles(%{"q" => "zippy"})
+      assert Enum.map(vehicles, & &1.id) == [civic.id]
+    end
+
+    test "blank manufacturer returns all vehicles" do
+      a = vehicle_fixture(%{name: "Honda Civic", manufacturer: "Honda"})
+      b = vehicle_fixture(%{name: "Ford Focus", manufacturer: "Ford"})
+      assert {vehicles, _} = Vehicles.list_vehicles(%{manufacturer: ""})
+      assert Enum.map(vehicles, & &1.id) |> Enum.sort() == Enum.sort([a.id, b.id])
+    end
+
+    test "exact manufacturer returns only that make" do
+      civic = vehicle_fixture(%{name: "Honda Civic", manufacturer: "Honda"})
+      _other = vehicle_fixture(%{name: "Ford Focus", manufacturer: "Ford"})
+      assert {vehicles, _} = Vehicles.list_vehicles(%{"manufacturer" => "Honda"})
+      assert Enum.map(vehicles, & &1.id) == [civic.id]
+    end
+
+    test "sort name_az orders names A to Z" do
+      vehicle_fixture(%{name: "Honda Civic", manufacturer: "Honda"})
+      vehicle_fixture(%{name: "Audi A4", manufacturer: "Audi"})
+      assert {vehicles, _} = Vehicles.list_vehicles(%{"sort" => "name_az"})
+      assert Enum.map(vehicles, & &1.name) == ["Audi A4", "Honda Civic"]
+    end
+
+    test "sort name_za orders names Z to A" do
+      vehicle_fixture(%{name: "Honda Civic", manufacturer: "Honda"})
+      vehicle_fixture(%{name: "Audi A4", manufacturer: "Audi"})
+      assert {vehicles, _} = Vehicles.list_vehicles(%{"sort" => "name_za"})
+      assert Enum.map(vehicles, & &1.name) == ["Honda Civic", "Audi A4"]
+    end
+
+    test "sort make_az orders manufacturers A to Z" do
+      vehicle_fixture(%{name: "Honda Civic", manufacturer: "Honda"})
+      vehicle_fixture(%{name: "Audi A4", manufacturer: "Audi"})
+      assert {vehicles, _} = Vehicles.list_vehicles(%{"sort" => "make_az"})
+      assert Enum.map(vehicles, & &1.manufacturer) == ["Audi", "Honda"]
+    end
+
+    test "sort newest falls back to default order" do
+      vehicle_fixture(%{name: "Honda Civic", manufacturer: "Honda"})
+      vehicle_fixture(%{name: "Audi A4", manufacturer: "Audi"})
+      assert {newest, _} = Vehicles.list_vehicles(%{"sort" => "newest"})
+      assert {default, _} = Vehicles.list_vehicles()
+      assert Enum.map(newest, & &1.id) == Enum.map(default, & &1.id)
+    end
+
+    test "hostile input falls back to defaults without error" do
+      a = vehicle_fixture(%{name: "Honda Civic", manufacturer: "Honda"})
+      b = vehicle_fixture(%{name: "Ford Focus", manufacturer: "Ford"})
+      assert {vehicles, %Flop.Meta{}} = Vehicles.list_vehicles(%{sort: "drop table", q: ""})
+      assert Enum.map(vehicles, & &1.id) |> Enum.sort() == Enum.sort([a.id, b.id])
+    end
+
+    test "unknown filter keys are ignored" do
+      vehicle = vehicle_fixture()
+
+      assert {vehicles, %Flop.Meta{}} =
+               Vehicles.list_vehicles(%{
+                 "filters" => [%{"field" => "nope", "op" => :==, "value" => "x"}]
+               })
+
+      assert vehicles == [vehicle]
+    end
+
+    test "list_manufacturers/0 returns distinct makes sorted A-Z" do
+      vehicle_fixture(%{name: "Honda Civic", manufacturer: "Honda"})
+      vehicle_fixture(%{name: "Ford Focus", manufacturer: "Ford"})
+      vehicle_fixture(%{name: "Honda Accord", manufacturer: "Honda"})
+      assert Vehicles.list_manufacturers() == ["Ford", "Honda"]
     end
 
     test "get_vehicle!/1 returns the vehicle with given id" do
