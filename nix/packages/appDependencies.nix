@@ -3,7 +3,7 @@ pkgs.symlinkJoin {
   name = "appDependencies";
   paths = with pkgs; [
     postgresql
-    inotifyTools
+    inotify-tools
     vips
   ];
 }

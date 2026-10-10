@@ -44,18 +44,18 @@ defmodule NextGearMotors.MixProject do
       {:argon2_elixir, "~> 4.0"},
       {:bandit, "~> 1.5"},
       {:credo, "~> 1.7", runtime: false},
-      {:deps_nix, "~> 2.0", only: :dev},
-      {:dns_cluster, "~> 0.1.1"},
+      {:deps_nix, "~> 3.1.1", only: :dev},
+      {:dns_cluster, "~> 0.3.1"},
       {:ecto_psql_extras, "~> 0.8"},
       {:ecto_sql, "~> 3.10"},
       {:esbuild, "~> 0.10", runtime: Mix.env() == :dev},
-      {:ex_aws, "~> 2.1.2"},
+      {:ex_aws, "~> 2.7.0"},
       {:ex_aws_s3, "~> 2.0"},
       {:ex_doc, "~> 0.38", runtime: false, warn_if_outdated: true},
       {:finch, "~> 0.13"},
       {:floki, ">= 0.30.0"},
-      {:gettext, "~> 0.20"},
-      {:hackney, "~> 1.9"},
+      {:gettext, "~> 1.0.2"},
+      {:hackney, "~> 4.8.5"},
       {:hammer, "~> 7.0"},
       {:heroicons,
        github: "tailwindlabs/heroicons",
@@ -66,17 +66,18 @@ defmodule NextGearMotors.MixProject do
        depth: 1},
       {:image, "~> 0.61"},
       {:jason, "~> 1.2"},
+      {:lazy_html, ">= 0.1.0", only: :test},
       {:mail, "~> 0.5.1"},
       {:mix_audit, "~> 2.1", runtime: false},
       {:mix_test_watch, "~> 1.0", runtime: false},
       {:mogrify, "~> 0.9.3"},
       {:mua, "~> 0.2"},
-      {:phoenix, "~> 1.7.21"},
+      {:phoenix, "~> 1.8.15"},
       {:phoenix_ecto, "~> 4.5"},
       {:phoenix_html, "~> 4.1"},
-      {:phoenix_live_dashboard, "~> 0.8.3"},
+      {:phoenix_live_dashboard, "~> 0.9.1"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 1.0.11", override: true},
+      {:phoenix_live_view, "~> 1.2.12", override: true},
       {:postgrex, ">= 0.0.0"},
       {:sobelow, "~> 0.13", runtime: false},
       {:sweet_xml, "~> 0.6"},
@@ -84,8 +85,8 @@ defmodule NextGearMotors.MixProject do
       {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
-      {:waffle, "~> 1.1"},
-      {:waffle_ecto, github: "nash-io/waffle_ecto", tag: "v0.0.12"}
+      {:waffle, "~> 2.0.0"},
+      {:waffle_ecto, "~> 0.0.13"}
     ]
   end
 
@@ -99,9 +100,9 @@ defmodule NextGearMotors.MixProject do
     [
       "deps.get": [
         "deps.get",
-        "deps.nix"
+        "deps.nix --env dev --env test"
       ],
-      "deps.update": ["deps.update", "deps.nix"],
+      "deps.update": ["deps.update", "deps.nix --env dev --env test"],
       setup: ["deps.get", "ecto.setup", "assets.setup", "assets.build"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],

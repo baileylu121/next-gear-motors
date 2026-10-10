@@ -42,7 +42,7 @@ config :esbuild,
 
 # Configure tailwind (the version is required)
 config :tailwind,
-  version: "4.1.11",
+  version: "4.3.3",
   next_gear_motors: [
     args: ~w(
       --input=assets/css/app.css

@@ -11,9 +11,11 @@ let
       cd "$root"
 
       mix deps.get
+      mix compile
 
-      tailwind_path="$(mix eval 'Tailwind.bin_path() |> IO.puts()')"
-      ln -sfv ${pkgs.tailwindcss_4}/bin/tailwindcss "$tailwind_path"
+      tailwind_output="$(mix eval 'Tailwind.bin_path() |> IO.puts()')"
+      tailwind_path="''${tailwind_output##*$'\n'}"
+      ln -sfv "${pkgs.tailwindcss_4}/bin/tailwindcss" "$tailwind_path"
 
       cd ./assets
       npm install
@@ -22,7 +24,7 @@ let
 in
 pkgs.mkShell {
   packages = with pkgs; [
-    elixir
+    beamPackages.elixir
     nodejs
     watchman
     flyctl

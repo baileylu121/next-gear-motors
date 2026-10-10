@@ -1,11 +1,11 @@
-{ pkgs, flake }:
+{ pkgs }:
 pkgs.writeShellApplication {
   name = "docsWatch";
 
   runtimeInputs = with pkgs; [
     watchexec
-    elixir
-    nodePackages.browser-sync
+    beamPackages.elixir
+    browser-sync
   ];
 
   text = ''

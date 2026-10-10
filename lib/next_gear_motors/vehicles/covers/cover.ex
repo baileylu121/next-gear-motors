@@ -25,9 +25,10 @@ defmodule NextGearMotors.Vehicles.Covers.Cover do
          "extension found on #{file.path} was not contained within #{inspect(@extensions)}"}
   end
 
-  def transform(_version, _), do: {&to_webp/2, fn _, _ -> :webp end}
+  def transform(version, _) when version in @versions,
+    do: {&to_webp/2, fn _, _ -> :webp end}
 
-  defp to_webp(_version, file) do
+  defp to_webp(_version, %Waffle.File{} = file) do
     new_path = Waffle.File.generate_temporary_path("webp")
 
     with {:ok, image} <- Image.open(file.path),

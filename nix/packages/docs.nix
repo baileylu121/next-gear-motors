@@ -4,7 +4,7 @@
   system,
 }:
 let
-  mixNixDeps = pkgs.callPackages ../../deps.nix { };
+  mixNixDeps = flake.lib.mixNixDeps pkgs;
 in
 pkgs.beamPackages.mixRelease {
   inherit mixNixDeps;
@@ -17,8 +17,10 @@ pkgs.beamPackages.mixRelease {
   removeCookie = false;
   stripDebug = true;
 
-  DATABASE_URL = "";
-  SECRET_KEY_BASE = "";
+  env = {
+    DATABASE_URL = "postgres://localhost/next_gear_motors";
+    SECRET_KEY_BASE = "build-time-placeholder";
+  };
 
   nativeBuildInputs = [
     flake.packages.${system}.appDependencies
@@ -34,5 +36,7 @@ pkgs.beamPackages.mixRelease {
     mkdir -p $out/lib/doc
 
     cp -r ./doc/. $out/lib/doc
+
+    mkdir -p $out/bin
   '';
 }

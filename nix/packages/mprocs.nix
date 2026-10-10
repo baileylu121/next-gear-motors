@@ -4,7 +4,7 @@ pkgs.writeShellApplication {
 
   runtimeInputs = with pkgs; [
     mprocs
-    elixir
+    beamPackages.elixir
     flake.packages.${system}.appDependencies
     flake.packages.${system}.docsWatch
     flake.packages.${system}.postgresDev

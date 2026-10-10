@@ -4,7 +4,7 @@
   system,
 }:
 let
-  mixNixDeps = pkgs.callPackages (flake + "/deps.nix") { };
+  mixNixDeps = flake.lib.mixNixDeps pkgs;
 in
 pkgs.beamPackages.mixRelease rec {
   inherit mixNixDeps;
@@ -17,8 +17,10 @@ pkgs.beamPackages.mixRelease rec {
   removeCookie = false;
   stripDebug = true;
 
-  DATABASE_URL = "";
-  SECRET_KEY_BASE = "";
+  env = {
+    DATABASE_URL = "postgres://localhost/next_gear_motors";
+    SECRET_KEY_BASE = "build-time-placeholder";
+  };
 
   nativeBuildInputs = with pkgs; [
     flake.packages.${system}.appDependencies
@@ -32,7 +34,7 @@ pkgs.beamPackages.mixRelease rec {
 
     pname = "${pname}-npm-deps";
     src = (flake + "/assets");
-    hash = "sha256-uyS99ud5gF0VjA4TBOWL6QaJmnjCm840t6Sa9KDp0LE=";
+    hash = "sha256-hDbD7f5TbL6UOeNRJo4YzdOBfC05fakFjO2mlLi9oBY=";
   };
 
   npmRoot = "./assets";
@@ -40,18 +42,18 @@ pkgs.beamPackages.mixRelease rec {
 
   postBuild = ''
     tailwind_path="$(mix do \
-      app.config --no-deps-check --no-compile, \
+      app.config --no-deps-check --no-compile + \
       eval 'Tailwind.bin_path() |> IO.puts()')"
     esbuild_path="$(mix do \
-      app.config --no-deps-check --no-compile, \
+      app.config --no-deps-check --no-compile + \
       eval 'Esbuild.bin_path() |> IO.puts()')"
 
     ln -sfv ${pkgs.tailwindcss_4}/bin/tailwindcss "$tailwind_path"
     ln -sfv ${pkgs.esbuild}/bin/esbuild "$esbuild_path"
-    ln -sfv ${mixNixDeps.heroicons} deps/heroicons
+    ln -sfvn ${mixNixDeps.heroicons}/src deps/heroicons
 
     mix do \
-      app.config --no-deps-check --no-compile, \
+      app.config --no-deps-check --no-compile + \
       assets.deploy --no-deps-check
   '';
 

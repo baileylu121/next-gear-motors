@@ -13,21 +13,15 @@
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  nixConfig = {
-    extra-substituters = [
-      "https://cache.nixos.org"
-      "https://cache.garnix.io"
-    ];
-    extra-trusted-public-keys = [
-      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
-    ];
-  };
-
   outputs =
     inputs:
     inputs.blueprint {
       inherit inputs;
       prefix = "nix/";
+      nixpkgs.overlays = [
+        (final: _prev: {
+          beamPackages = final.beam29Packages.overrideScope (final: _prev: { elixir = final.elixir_1_20; });
+        })
+      ];
     };
 }

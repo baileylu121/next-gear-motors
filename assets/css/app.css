@@ -1,12 +1,62 @@
-@import "tailwindcss";
+/* See the Tailwind configuration guide for advanced usage
+   https://tailwindcss.com/docs/configuration */
+
+@import "tailwindcss" source(none);
+@source "../css";
+@source "../js";
+@source "../../lib/next_gear_motors_web";
+
+/* A Tailwind plugin that makes "hero-#{ICON}" classes available.
+   The heroicons installation itself is managed by your mix.exs */
+@plugin "../vendor/heroicons";
 
 @plugin "@tailwindcss/forms";
 @plugin "@tailwindcss/typography";
 
-@config '../tailwind.config.js';
+/* Add variants based on LiveView classes */
+@custom-variant phx-click-loading (.phx-click-loading&, .phx-click-loading &);
+@custom-variant phx-submit-loading (.phx-submit-loading&, .phx-submit-loading &);
+@custom-variant phx-change-loading (.phx-change-loading&, .phx-change-loading &);
 
 @theme {
   --font-sans: "Inter", sans-serif;
+
+  --color-raw-sienna-50: #fcf5ee;
+  --color-raw-sienna-100: #f6e2cf;
+  --color-raw-sienna-200: #ecc39b;
+  --color-raw-sienna-300: #e29e67;
+  --color-raw-sienna-400: #d87938;
+  --color-raw-sienna-500: #d2612e;
+  --color-raw-sienna-600: #b94726;
+  --color-raw-sienna-700: #9a3123;
+  --color-raw-sienna-800: #7e2822;
+  --color-raw-sienna-900: #68221f;
+  --color-raw-sienna-950: #3b0f0d;
+
+  --animate-fade-slide-down: fadeSlideDown 0.8s ease-out forwards;
+  --animate-fade-slide-right: fadeSlideRight 0.8s ease-out forwards;
+
+  @keyframes fadeSlideDown {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeSlideRight {
+    0% {
+      opacity: 0;
+      transform: translateX(40px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
 }
 
 /* This file is for your main application CSS */

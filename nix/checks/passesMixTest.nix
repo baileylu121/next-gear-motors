@@ -5,7 +5,7 @@
   ...
 }:
 let
-  mixNixDeps = pkgs.callPackages ../../deps.nix { };
+  mixNixDeps = flake.lib.mixNixDeps pkgs;
 in
 pkgs.beamPackages.mixRelease {
   inherit mixNixDeps;
@@ -15,8 +15,10 @@ pkgs.beamPackages.mixRelease {
 
   src = flake;
 
-  DATABASE_URL = "";
-  SECRET_KEY_BASE = "";
+  env = {
+    DATABASE_URL = "postgres://localhost/next_gear_motors";
+    SECRET_KEY_BASE = "build-time-placeholder";
+  };
 
   mixEnv = "test";
 
